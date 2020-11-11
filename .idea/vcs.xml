@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$/AlgorithmTraining" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Chin_Chin" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Corona" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fitinus" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/melGAN_FPN" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>
