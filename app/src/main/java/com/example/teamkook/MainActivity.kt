@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
         //my name is noa
         //new master
-
+        //test
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.mipmap.menu_icon)
