@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
         //my name is noa
         //new master
+        //master test
 
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
