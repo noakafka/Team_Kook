@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
         settingPermission()
         //my name is noa
         //new master
-        //branch
-        //b_test
+
+        //master test
 
         //setSupportActionBar(toolbar)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(false)
