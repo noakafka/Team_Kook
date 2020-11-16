@@ -6,25 +6,107 @@
     tools:context=".Fragment_B">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/img_picture"
-            android:layout_width="match_parent"
-            android:layout_weight="8"
-            android:layout_height="0dp"
-            tools:srcCompat="@tools:sample/avatars"
-            />
+        <LinearLayout
 
-        <Button
-            android:id="@+id/btn_picture"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp"
-            android:text="Button" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_marginHorizontal="17dp"
+                android:tint="@color/cardview_light_background"
+                android:layout_gravity="center"
+                android:src="@mipmap/back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+
+            <TextView
+                android:layout_marginVertical="10dp"
+                android:text="검색"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:background="@drawable/border_search"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:background="@null"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"></EditText>
+
+                <ImageView
+                    android:padding="3dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:tint="@color/colorPrimary"
+                    android:src="@mipmap/search"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"></ImageView>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/cam_btn"
+                android:padding="3dp"
+                android:layout_marginLeft="5dp"
+                android:tint="@color/colorPrimary"
+                android:src="@mipmap/camera"
+                android:layout_width="50dp"
+                android:layout_height="50dp">
+            </ImageView>
+
+
+            </LinearLayout>
+
+        <TextView
+            android:textSize="18dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/cardview_light_background"
+            android:text="  실시간 급상승 검색어"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+
+        <LinearLayout
+            android:layout_weight="9"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:id="@+id/realtime_keywords"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginVertical="20dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+
+        </LinearLayout>
 
     </LinearLayout>
+
 
 </FrameLayout>

@@ -49,9 +49,9 @@ class MainActivity : AppCompatActivity() {
         //branch
         //b_test
 
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setHomeAsUpIndicator(R.mipmap.menu_icon)
+        //setSupportActionBar(toolbar)
+        //supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+        //supportActionBar!!.setHomeAsUpIndicator(R.mipmap.menu_icon)
 
         var main_adapter = Main_pager_Adapter(supportFragmentManager)
 
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         tabs_main.setupWithViewPager(VP)
         tabs_main.getTabAt(0)?.setIcon(resources.getDrawable(R.mipmap.menu_icon))
-        tabs_main.getTabAt(1)?.setIcon(resources.getDrawable(R.mipmap.menu_icon))
+        tabs_main.getTabAt(1)?.setIcon(resources.getDrawable(R.mipmap.search))
         tabs_main.getTabAt(2)?.setIcon(resources.getDrawable(R.mipmap.menu_icon))
         tabs_main.getTabAt(3)?.setIcon(resources.getDrawable(R.mipmap.menu_icon))
 
