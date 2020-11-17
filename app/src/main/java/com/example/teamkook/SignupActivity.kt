@@ -50,6 +50,11 @@ class SignupActivity : AppCompatActivity() {
                 Toast.makeText(this,"회원가입에 실패했습니다.",Toast.LENGTH_SHORT).show()
             }
         }
+        back.setOnClickListener {
+            val i=Intent(this,LoginActivity::class.java)
+            startActivity(i)
+            finish()
+        }
     }
 
     fun idRedundancy(_id:String){
