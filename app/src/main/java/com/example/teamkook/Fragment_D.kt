@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_d.*
 /**
  * A simple [Fragment] subclass.
  */
-class Fragment_D(var c : Context) : Fragment() {
+class Fragment_D(var c: Context) : Fragment() {
 
     val arr = arrayListOf<String>("이대로 끓이니까 너무 맛있었어요~!!!", "제 기준 굴소스를 추가하니까 더 맛있더라구요", "에어프라이기로 하면 더 쉽습니당~!~!","ㅜㅜ 제 입맛에는 아닌가 봐요.. 별로였어요..")
     val fav_arr = arrayListOf<String>("김치찌개", "한식")

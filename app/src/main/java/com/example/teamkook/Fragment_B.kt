@@ -37,7 +37,7 @@ import kotlin.collections.ArrayList
 /**
  * A simple [Fragment] subclass.
  */
-class Fragment_B(var c : Context) : Fragment() {
+class Fragment_B(var c :Context) : Fragment() {
 
     val arr = arrayListOf<String>("1", "2", "3","4", "5", "6","7", "8", "9","10")
 

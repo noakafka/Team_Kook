@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         var data1 : Fragment = Fragment_A()
         var data2 : Fragment = Fragment_B(applicationContext)
-        var data3 : Fragment = Fragment_C(applicationContext)
+        var data3 : Fragment = Fragment_C()
         var data4 : Fragment = Fragment_D(applicationContext)
 
 
