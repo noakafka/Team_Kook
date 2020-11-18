@@ -50,10 +50,21 @@ class ReviewAdapter (options : FirebaseRecyclerOptions<ReviewInfo>)
         Log.i("파싱한 아이디값", id);
         var url1 : String = "https://img.youtube.com/vi/"+id+"/0.jpg"
         Glide.with(holder.reviewImage.context).load(url1).into(holder.reviewImage)
-        holder.reviewYoutube.text = model.link
+
         holder.reviewContent.text = model.content
         holder.reviewScore.rating = model.rating
         holder.reviewSpicy.rating = model.spicy
+        when(position){
+            0 -> {
+                holder.reviewYoutube.text = "성공률 100% 돼지고기 김치찌개"
+            }
+            1->{
+                holder.reviewYoutube.text = "성공률 100% 돼지고기 김치찌개"
+            }
+            2->{
+                holder.reviewYoutube.text = "된장찌개 '1' (제일 쉬운 버전)"
+            }
+        }
     }
 }
 
