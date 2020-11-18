@@ -9,7 +9,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
+/////////////////////////sdafdsf
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,9 +51,9 @@ class MainActivity : AppCompatActivity() {
     inner class Main_pager_Adapter : FragmentPagerAdapter {
 
         var data1 : Fragment = Fragment_A()
-        var data2 : Fragment = Fragment_B(applicationContext)
-        var data3 : Fragment = Fragment_C(applicationContext)
-        var data4 : Fragment = Fragment_D(applicationContext)
+        var data2 : Fragment = Fragment_B()
+        var data3 : Fragment = Fragment_C()
+        var data4 : Fragment = Fragment_D()
 
 
         var tab_data : ArrayList<Fragment> = arrayListOf(data1,data2,data3,data4)
