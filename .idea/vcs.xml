@@ -2,5 +2,12 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+
+    <mapping directory="$PROJECT_DIR$/AlgorithmTraining" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Chin_Chin" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Corona" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fitinus" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/melGAN_FPN" vcs="Git" />
+
   </component>
 </project>
