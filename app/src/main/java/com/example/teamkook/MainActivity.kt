@@ -57,10 +57,10 @@ class MainActivity : AppCompatActivity() {
         VP.offscreenPageLimit = 3
 
         tabs_main.setupWithViewPager(VP)
-        tabs_main.getTabAt(0)?.setIcon(resources.getDrawable(R.mipmap.menu_icon))
+        tabs_main.getTabAt(0)?.setIcon(resources.getDrawable(R.mipmap.home))
         tabs_main.getTabAt(1)?.setIcon(resources.getDrawable(R.mipmap.search))
-        tabs_main.getTabAt(2)?.setIcon(resources.getDrawable(R.mipmap.menu_icon))
-        tabs_main.getTabAt(3)?.setIcon(resources.getDrawable(R.mipmap.menu_icon))
+        tabs_main.getTabAt(2)?.setIcon(resources.getDrawable(R.mipmap.comment))
+        tabs_main.getTabAt(3)?.setIcon(resources.getDrawable(R.mipmap.profile))
 
         tabs_main.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
 
