@@ -11,7 +11,7 @@ import android.view.ViewGroup
 /**
  * A simple [Fragment] subclass.
  */
-class Fragment_B(var c : Context) : Fragment() {
+class Fragment_B() : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
