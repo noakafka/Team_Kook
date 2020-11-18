@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "911444218982",
+    "firebase_url": "https://team-kook.firebaseio.com",
+    "project_id": "team-kook",
+    "storage_bucket": "team-kook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911444218982:android:970ffc0c0a61dc15f109a7",
+        "android_client_info": {
+          "package_name": "com.example.teamkook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911444218982-ipv9ubq0lit8j5n7v8uaoheocjlh4i37.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.teamkook",
+            "certificate_hash": "a31f63bdf67161c1603870fa078f61fd4f6c6136"
+          }
+        },
+        {
+          "client_id": "911444218982-2rllasb71h010himg5b2aqq690cn8p2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9be0DtF5Lf0MKwbcQAxdfnFpcS-pr2js"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911444218982-2rllasb71h010himg5b2aqq690cn8p2b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
