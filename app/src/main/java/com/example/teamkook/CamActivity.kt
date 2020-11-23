@@ -36,10 +36,12 @@ class CamActivity : AppCompatActivity() {
     val OPEN_GALLERY = 100
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath : String
+    lateinit var classifier: Classifier
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cam)
+        initClassifier()
 
         btn_picture.setOnClickListener {
             startCapture()
@@ -49,6 +51,10 @@ class CamActivity : AppCompatActivity() {
             openGallery()
         }
 
+    }
+
+    fun initClassifier() {
+        classifier = Classifier(this)
     }
 
     fun openGallery(){
@@ -123,6 +129,9 @@ class CamActivity : AppCompatActivity() {
             val bitmap = ImageDecoder.decodeBitmap(decode)
             img_picture.setImageBitmap(bitmap)
 
+            val result = classifier.classify(bitmap)
+            renderResult(result)
+
         }
 
         if(requestCode == OPEN_GALLERY && resultCode == Activity.RESULT_OK){
@@ -138,6 +147,8 @@ class CamActivity : AppCompatActivity() {
             bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.width, bitmap.height, matrix, true)
 
             img_picture.setImageBitmap(bitmap)
+            val result = classifier.classify(bitmap)
+            renderResult(result)
             //var matrix : Matrix = Matrix()
             //matrix.setRotate(getOrientation(getRealPathFromURI(dataUri!!)).toFloat(), (bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat())
             //img_picture.setImageBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true))
@@ -148,9 +159,11 @@ class CamActivity : AppCompatActivity() {
             //val bitmap = ImageDecoder.decodeBitmap(decode)
 
 
-
         }
 
+    }
+    private fun renderResult(result: Recognition) {
+        Toast.makeText(applicationContext, result.label.toString(),Toast.LENGTH_SHORT).show()
     }
 
 }

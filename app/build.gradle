@@ -15,6 +15,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    aaptOptions{
+        noCompress "tflite"
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -24,6 +27,10 @@ android {
 }
 
 dependencies {
+    implementation('org.apache.directory.studio:org.apache.commons.io:2.4')
+    implementation('org.tensorflow:tensorflow-lite:0.0.0-nightly') { changing = true }
+    implementation('org.tensorflow:tensorflow-lite-gpu:0.0.0-nightly') { changing = true }
+    implementation('org.tensorflow:tensorflow-lite-support:0.0.0-nightly') { changing = true }
     implementation 'gun0912.ted:tedpermission:2.2.3'
     implementation platform('com.google.firebase:firebase-bom:26.0.0')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
