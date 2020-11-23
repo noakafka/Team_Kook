@@ -52,12 +52,10 @@ class Fragment_A : Fragment() {
             }
         }
         ///////////// test
-        explanation.text = """김치찌개
-            |한국인의 소울푸드 김치찌개!
-            |김치찌개를 먹은지도 일주일이 넘었네요~
-            |오늘은 김치찌개 어떠세요??
-        """.trimMargin()
+        personal_food.text = "얼큰한 김치찌개"
+        explanation.text = "김치찌개 레시피 영상을 찾아본 지도 일주일이 넘었네요~! 오늘은 오랜만에 김치찌개 어떠세요?"
         personal_recommendation.setImageResource(R.drawable.img1)
+        //recommendinfo 구조 바꾸기
         recommendAdapter.info.add(RecommendInfo("1", "김치전", "수제비", "떡볶이"))
         recommendAdapter.info.add(RecommendInfo("2", "참치김밥", "라면", "카레"))
         recommendAdapter.info.add(RecommendInfo("3", "샐러드", "미역국", "순대"))
