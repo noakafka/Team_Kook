@@ -123,8 +123,8 @@ class SignupActivity : AppCompatActivity() {
                 val personal=Account(id.text.toString(),_pw,_age.toInt(),gender,_vegan,allergy)
 
                 //파이어베이스에 항목 만들기
-                val rdatabese=mDatabase.getReference("Accounts")
-                rdatabese.child(id.text.toString()).setValue(personal)
+                val rdatabase=mDatabase.getReference("Accounts")
+                rdatabase.child(id.text.toString()).setValue(personal)
 
                 return true
             }else{

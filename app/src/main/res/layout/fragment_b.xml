@@ -67,11 +67,12 @@
                     android:layout_height="match_parent"></EditText>
 
                 <ImageView
-                    android:padding="3dp"
-                    android:tint="@color/colorPrimary"
-                    android:src="@mipmap/search"
+                    android:id="@+id/search"
                     android:layout_width="35dp"
-                    android:layout_height="35dp"></ImageView>
+                    android:layout_height="35dp"
+                    android:padding="3dp"
+                    android:src="@mipmap/search"
+                    android:tint="@color/colorPrimary"></ImageView>
 
             </LinearLayout>
 

@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
-    var mDatabase=FirebaseDatabase.getInstance()
+    val mDatabase=FirebaseDatabase.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
             checkAccount(_id,_pw)
             val hand= Handler();
             hand.postDelayed({
-                Toast.makeText(this@LoginActivity,"아이디와 비밀번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@LoginActivity,"아이디와 비밀번호가 일치하지 않습니다.",Toast.LENGTH_SHORT).show()
                 id.setText("")
                 password.setText("")
             },2000) //데이터 늘어나면 시간 늘려야되나?
@@ -59,8 +59,9 @@ class LoginActivity : AppCompatActivity() {
                         val account=shot.getValue(Account::class.java)
                         if(account!=null){
                             if(account.pw==pw){
-                                Toast.makeText(this@LoginActivity,"로그인 성공ㅎㅎ.",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@LoginActivity,id+"님 환영합니다.",Toast.LENGTH_SHORT).show()
                                 val i=Intent(this@LoginActivity, MainActivity::class.java)
+                                i.putExtra("id",id)
                                 startActivity(i)
                                 finish()
                             }
