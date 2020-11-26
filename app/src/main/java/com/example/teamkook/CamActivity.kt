@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.media.ExifInterface
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +30,10 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.common.FileUtil
+import java.io.ByteArrayOutputStream
+import kotlin.collections.ArrayList
 import kotlin.math.log
 import kotlin.random.Random
 
@@ -36,13 +42,12 @@ class CamActivity : AppCompatActivity() {
     val OPEN_GALLERY = 100
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath : String
-    lateinit var classifier: Classifier
+    lateinit var predictor : Predictor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cam)
-        initClassifier()
-
+        init_predictor()
         btn_picture.setOnClickListener {
             startCapture()
         }
@@ -53,10 +58,9 @@ class CamActivity : AppCompatActivity() {
 
     }
 
-    fun initClassifier() {
-        classifier = Classifier(this)
+    fun init_predictor(){
+        predictor = Predictor(applicationContext)
     }
-
     fun openGallery(){
         val intent :Intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.setType("image/*")
@@ -129,8 +133,8 @@ class CamActivity : AppCompatActivity() {
             val bitmap = ImageDecoder.decodeBitmap(decode)
             img_picture.setImageBitmap(bitmap)
 
-            val result = classifier.classify(bitmap)
-            renderResult(result)
+            //val result = classifier.classify(bitmap)
+            //renderResult(result)
 
         }
 
@@ -143,27 +147,22 @@ class CamActivity : AppCompatActivity() {
             var bitmap : Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, dataUri)
 
             val matrix = Matrix()
-            matrix.postRotate(90F)
+            //matrix.postRotate(90F)
             bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.width, bitmap.height, matrix, true)
 
             img_picture.setImageBitmap(bitmap)
-            val result = classifier.classify(bitmap)
-            renderResult(result)
-            //var matrix : Matrix = Matrix()
-            //matrix.setRotate(getOrientation(getRealPathFromURI(dataUri!!)).toFloat(), (bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat())
-            //img_picture.setImageBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true))
-
-            //var dataUri = data?.data
-            //val file = File(absolutelyPath(dataUri!!))
-            //val decode = ImageDecoder.createSource(applicationContext.contentResolver, Uri.fromFile(file))
-            //val bitmap = ImageDecoder.decodeBitmap(decode)
-
-
+            val m = predictor.recognizeImage(bitmap)
+            var maxi = 0F
+            var name = ""
+            for (k in m.keys) {
+                if(maxi < m[k]!!){
+                    maxi = m[k]!!
+                    name = k
+                }
+            }
+            Log.d("value", name + " " + maxi.toString())
         }
 
-    }
-    private fun renderResult(result: Recognition) {
-        Toast.makeText(applicationContext, result.label.toString(),Toast.LENGTH_SHORT).show()
     }
 
 }
