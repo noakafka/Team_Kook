@@ -43,9 +43,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        val i=intent
+//        val ID=i.getStringExtra("id") //로그인에서 전달한 아이디 전달받기
         settingPermission()
-        //my name is noa
-        //new master
 
         //setSupportActionBar(toolbar)
         //supportActionBar!!.setDisplayHomeAsUpEnabled(false)

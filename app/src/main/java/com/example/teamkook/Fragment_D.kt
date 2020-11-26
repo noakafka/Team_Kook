@@ -20,28 +20,38 @@ class Fragment_D(var c: Context) : Fragment() {
 
     val arr = arrayListOf<String>("이대로 끓이니까 너무 맛있었어요~!!!", "제 기준 굴소스를 추가하니까 더 맛있더라구요", "에어프라이기로 하면 더 쉽습니당~!~!","ㅜㅜ 제 입맛에는 아닌가 봐요.. 별로였어요..")
     val fav_arr = arrayListOf<String>("김치찌개", "한식")
+    lateinit var ID:String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        if(activity!=null){
+            val intent=activity!!.intent
+            if(intent!=null){
+                ID=intent.getStringExtra("id")
+            }
+        }
         return inflater.inflate(R.layout.fragment_d, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        username.setText(ID)
 
         add_review_key()
         add_favorite_folder()
 
         go_user_setting.setOnClickListener {
             val userIntent = Intent(c, UserActivity::class.java)
+            userIntent.putExtra("id",ID)
             startActivity(userIntent)
         }
 
         go_folders.setOnClickListener {
             val nextIntent = Intent(c, FolderActivity::class.java)
+            nextIntent.putExtra("id",ID)
             startActivity(nextIntent)
         }
     }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="filter">
+        <item>초보</item>
+        <item>매운</item>
+        <item>백종원 레시피</item>
+        <item>김수미 레시피</item>
+        <item>만개의 레시피</item>
+        <item>다이어트</item>
+        <item>비건</item>
+    </string-array>
+</resources>
