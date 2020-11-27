@@ -17,7 +17,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 class ReviewAdapter (options : FirebaseRecyclerOptions<ReviewInfo>)
     : FirebaseRecyclerAdapter<ReviewInfo, ReviewAdapter.ViewHolder>(options) {
 
-
+    var itemClickListener : ReviewAdapter.OnItemClickListener?= null
     inner class ViewHolder(itemView : View)
         : RecyclerView.ViewHolder(itemView){
         var reviewImage : ImageView
@@ -31,9 +31,15 @@ class ReviewAdapter (options : FirebaseRecyclerOptions<ReviewInfo>)
             reviewContent = itemView.findViewById(R.id.review_content)
             reviewScore = itemView.findViewById(R.id.rating_score)
             reviewSpicy = itemView.findViewById(R.id.rating_spicy)
+            itemView.setOnClickListener {
+                itemClickListener?.onReviewItemClick(itemView, adapterPosition)
+            }
         }
     }
 
+    interface OnItemClickListener{
+        fun onReviewItemClick(view : View, position : Int)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.row_review, parent, false)
