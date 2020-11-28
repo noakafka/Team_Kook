@@ -49,7 +49,6 @@ class CamActivity : AppCompatActivity() {
         btn_gallery.setOnClickListener {
             openGallery()
         }
-
     }
 
     fun init_predictor(){
@@ -140,7 +139,7 @@ class CamActivity : AppCompatActivity() {
             var bitmap : Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, dataUri)
 
             val matrix = Matrix()
-            matrix.postRotate(90F)
+            //matrix.postRotate(90F)
             bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.width, bitmap.height, matrix, true)
 
             img_picture.setImageBitmap(bitmap)
@@ -153,10 +152,13 @@ class CamActivity : AppCompatActivity() {
                     name = k
                 }
             }
-            Toast.makeText(applicationContext, name, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(applicationContext, name, Toast.LENGTH_SHORT).show()
             //Log.d("value", name + " " + maxi.toString())
-
-
+            val intent =Intent()
+            intent.putExtra("learned_food", name)
+            setResult(Activity.RESULT_OK, intent)
+            
+            finish()
         }
 
     }

@@ -1,5 +1,6 @@
 package com.example.teamkook
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -11,8 +12,15 @@ import com.google.android.material.tabs.TabLayout
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_b.*
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity  : AppCompatActivity() {
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Toast.makeText(applicationContext,"cccc", Toast.LENGTH_SHORT).show()
+    }
 
     fun settingPermission(){
         var permis = object  : PermissionListener {
