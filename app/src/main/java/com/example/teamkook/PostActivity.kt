@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
@@ -21,16 +22,16 @@ import org.jsoup.select.Elements
 import java.lang.ref.WeakReference
 import java.net.URL
 
-class PostActivity : AppCompatActivity() {
+class PostActivity : YouTubeBaseActivity() {
 
-    val youtubeViewer = findViewById<YouTubePlayerView>(R.id.youtubeViewer)
+    lateinit var youtubeViewer : YouTubePlayerView
     lateinit var link : String //유튜브 링크
     lateinit var linkID : String
     lateinit var ID :String
     val url1 = "https://www.googleapis.com/youtube/v3/videos?id="
     val url2 = "&key=AIzaSyAONAWO0Dta_zwAnMMBmNqkwBjCgSNGVSU&part=snippet"
     val APIKEY = "AIzaSyAONAWO0Dta_zwAnMMBmNqkwBjCgSNGVSU"
-
+    
     //현재 동영상 정보
     var title = ""
     var description = ""
@@ -44,14 +45,17 @@ class PostActivity : AppCompatActivity() {
         setContentView(R.layout.activity_post)
 
         if(intent.hasExtra("id")){
-            ID = intent.getStringExtra("id")
+            //ID = intent.getStringExtra("id")
+            ID = "ldh1"
         }
-        else if(intent.hasExtra("link")){
+        if(intent.hasExtra("link")){
             link = intent.getStringExtra("link")
         }
 
-        //유튜브 링크에서 id만 추출 (v이후 값)
+        youtubeViewer = findViewById<YouTubePlayerView>(R.id.youtubeViewer)
 
+        //유튜브 링크에서 id만 추출 (v이후 값)
+        linkID = "qWbHSOplcvY"
         init()
     }
 
@@ -89,6 +93,8 @@ class PostActivity : AppCompatActivity() {
         post_recyclerview.adapter = postAdapter
 
 
+        //startTask()
+
         //리뷰 기능
         add_post.setOnClickListener {
             if(post_content.text.toString() == null || new_score.rating == null ||
@@ -99,7 +105,16 @@ class PostActivity : AppCompatActivity() {
                 val newPost = ReviewInfo(ID, link, post_content.text.toString(), new_score.rating, new_spicy.rating)
                 var rdatabase = FirebaseDatabase.getInstance().getReference("Review").child("link")
 
+                //review - link - 링크주소 - 리뷰 정보 순으로 데이터베이스
+                //시간 순으로 추가되게끔 데베 추가
                 rdatabase.setValue(newPost)
+
+                //리뷰 입력창 초기화
+                post_content.text = null
+                new_score.rating = 0.0f
+                new_spicy.rating = 0.0f
+
+
             }
         }
     }

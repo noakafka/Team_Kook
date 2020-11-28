@@ -23,6 +23,7 @@ class Fragment_C() : Fragment() {
     lateinit var layoutManager: LinearLayoutManager
     lateinit var reviewAdapter : ReviewAdapter
     lateinit var rdb : DatabaseReference
+    lateinit var ID:String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +32,13 @@ class Fragment_C() : Fragment() {
         // Inflate the layout for this fragment
         var v : View = inflater.inflate(R.layout.fragment_c, container, false)
 
+
+        if(activity!=null){
+            val intent=activity!!.intent
+            if(intent!=null){
+                ID=intent.getStringExtra("id")
+            }
+        }
 
         return v
     }
@@ -58,6 +66,7 @@ class Fragment_C() : Fragment() {
             override fun onReviewItemClick(view: View, position: Int) {
                 val id = this@Fragment_C.id
                 val link = reviewAdapter.getItem(position).link
+                Log.i("frag_C link", link)
                 var i = Intent(activity, PostActivity::class.java)
                 i.putExtra("id", id)
                 i.putExtra("link", link)
