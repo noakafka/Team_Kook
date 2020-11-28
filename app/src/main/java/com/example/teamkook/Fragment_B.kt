@@ -1,6 +1,7 @@
 package com.example.teamkook
 
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -45,6 +46,9 @@ class Fragment_B(var c: Context) : Fragment() {
         }
         return inflater.inflate(R.layout.fragment_b, container, false)
     }
+
+
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -52,7 +56,8 @@ class Fragment_B(var c: Context) : Fragment() {
 
         cam_btn.setOnClickListener {
             val nextIntent = Intent(c, CamActivity::class.java)
-            startActivity(nextIntent)
+            startActivityForResult(nextIntent, 0)
+
         }
 
         search_checkbox.setOnClickListener {
@@ -106,6 +111,13 @@ class Fragment_B(var c: Context) : Fragment() {
 
 
         manageDB()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        var s : String? = data!!.getStringExtra("learned_food")
+        search_edit.setText(s)
+        Toast.makeText(c, s, Toast.LENGTH_SHORT).show()
     }
 
     fun manageDB(){

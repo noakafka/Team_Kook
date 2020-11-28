@@ -36,11 +36,12 @@ class CamActivity : AppCompatActivity() {
     val OPEN_GALLERY = 100
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath : String
+    lateinit var predictor : Predictor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cam)
-
+        init_predictor()
         btn_picture.setOnClickListener {
             startCapture()
         }
@@ -48,8 +49,12 @@ class CamActivity : AppCompatActivity() {
         btn_gallery.setOnClickListener {
             openGallery()
         }
-
     }
+
+    fun init_predictor(){
+        predictor = Predictor(applicationContext)
+    }
+
 
     fun openGallery(){
         val intent :Intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -130,25 +135,30 @@ class CamActivity : AppCompatActivity() {
             var ori = data?.data.toString()
             //var path = currentPhotoPath + dataUri?.path
             //var ori = getOrientation(path)
-            Toast.makeText(applicationContext, ori, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(applicationContext, ori, Toast.LENGTH_SHORT).show()
             var bitmap : Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, dataUri)
 
             val matrix = Matrix()
-            matrix.postRotate(90F)
+            //matrix.postRotate(90F)
             bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.width, bitmap.height, matrix, true)
 
             img_picture.setImageBitmap(bitmap)
-            //var matrix : Matrix = Matrix()
-            //matrix.setRotate(getOrientation(getRealPathFromURI(dataUri!!)).toFloat(), (bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat())
-            //img_picture.setImageBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true))
-
-            //var dataUri = data?.data
-            //val file = File(absolutelyPath(dataUri!!))
-            //val decode = ImageDecoder.createSource(applicationContext.contentResolver, Uri.fromFile(file))
-            //val bitmap = ImageDecoder.decodeBitmap(decode)
-
-
-
+            val m = predictor.recognizeImage(bitmap)
+            var maxi = 0F
+            var name = ""
+            for (k in m.keys) {
+                if(maxi < m[k]!!){
+                    maxi = m[k]!!
+                    name = k
+                }
+            }
+            //Toast.makeText(applicationContext, name, Toast.LENGTH_SHORT).show()
+            //Log.d("value", name + " " + maxi.toString())
+            val intent =Intent()
+            intent.putExtra("learned_food", name)
+            setResult(Activity.RESULT_OK, intent)
+            
+            finish()
         }
 
     }
