@@ -4,17 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class Folder_Adapter(val context: Context,
-                     var items:ArrayList<Folder>, val itemClick : (Folder) -> Unit): RecyclerView.Adapter<Folder_Adapter.ViewHolder>() {
-
+class InFolderAdapter (val context: Context, var items:ArrayList<Folder>, val itemClick : (Folder) -> Unit): RecyclerView.Adapter<InFolderAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(context)
-            .inflate(R.layout.item_folder, parent, false)
+            .inflate(R.layout.row_review, parent, false)
         return ViewHolder(v, itemClick)
     }
 
@@ -50,9 +47,4 @@ class Folder_Adapter(val context: Context,
         }
 
     }
-
-
-
-
-
 }

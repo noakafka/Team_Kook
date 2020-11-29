@@ -109,7 +109,6 @@ class Fragment_B(var c: Context) : Fragment() {
             alert.show()
         }
 
-
         manageDB()
     }
 
