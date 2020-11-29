@@ -73,14 +73,29 @@ class Fragment_D(var c: Context) : Fragment() {
             if(i == 0){
                 first_favorite_name.text = str
                 first_favorite.setImageResource(R.mipmap.favorite_folder)
+                first_favorite.setOnClickListener {
+                    var intent = Intent(c, InFolderActivity::class.java)
+                    intent.putExtra("f_name", first_favorite_name.text.toString())
+                    startActivity(intent)
+                }
             }
             else if(i == 1){
                 second_favorite_name.text = str
                 second_favorite.setImageResource(R.mipmap.favorite_folder)
+                second_favorite.setOnClickListener {
+                    var intent = Intent(c, InFolderActivity::class.java)
+                    intent.putExtra("f_name", second_favorite_name.text.toString())
+                    startActivity(intent)
+                }
             }
             else{
                 third_favorite_name.text = str
                 third_favorite.setImageResource(R.mipmap.favorite_folder)
+                third_favorite.setOnClickListener {
+                    var intent = Intent(c, InFolderActivity::class.java)
+                    intent.putExtra("f_name", third_favorite_name.text.toString())
+                    startActivity(intent)
+                }
             }
         }
     }
