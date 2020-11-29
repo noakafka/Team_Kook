@@ -15,12 +15,13 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_marginHorizontal="17dp"
-            android:tint="@color/cardview_light_background"
-            android:layout_gravity="center"
-            android:src="@mipmap/back"
+            android:id="@+id/post_back"
             android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="17dp"
+            android:src="@mipmap/back"
+            android:tint="@color/cardview_light_background" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,9 +33,10 @@
 
         <ImageButton
             android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_input_get" />
+            android:layout_width="150px"
+            android:layout_height="150px"
+            android:scaleType="fitCenter"
+            app:srcCompat="@mipmap/folder" />
 
     </LinearLayout>
 
@@ -88,9 +90,13 @@
 
             <ImageButton
                 android:id="@+id/add_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_input_add" />
+                android:layout_width="150px"
+                android:layout_height="150px"
+                android:backgroundTint="#C6C4C4"
+                android:scaleType="fitCenter"
+                android:tint="@color/design_default_color_on_secondary"
+                android:visibility="visible"
+                app:srcCompat="@mipmap/plus" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.fragment_c.*
 
 /**
@@ -48,6 +49,7 @@ class Fragment_C() : Fragment() {
         init()
     }
     fun init(){
+
         layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         review_recyclerview.layoutManager = layoutManager
 
@@ -55,8 +57,7 @@ class Fragment_C() : Fragment() {
 
 //        val info = ReviewInfo("ldh1", "https://www.youtube.com/watch?v=qWbHSOplcvY&feature=youtu.be", "이대로 끓이니까 너무 맛있었어요!!~", 4.0.toFloat(), 2.0.toFloat())
 //        rdb.push().setValue(info)
-        val query = FirebaseDatabase.getInstance().getReference("Review")
-
+        val query = FirebaseDatabase.getInstance().getReference("Review").child("time")
         
         val option = FirebaseRecyclerOptions.Builder<ReviewInfo>()
             .setQuery(query, ReviewInfo::class.java)

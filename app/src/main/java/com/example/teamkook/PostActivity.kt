@@ -55,7 +55,15 @@ class PostActivity : YouTubeBaseActivity() {
         youtubeViewer = findViewById<YouTubePlayerView>(R.id.youtubeViewer)
 
         //유튜브 링크에서 id만 추출 (v이후 값)
-        linkID = "qWbHSOplcvY"
+
+        var id1 : String = link.substring(link.lastIndexOf("=")+1)
+        var id2 :String= link.substring(link.lastIndexOf("/")+1)
+        var id = id1;
+        if(id2.length < id1.length)
+            id = id2;
+        linkID = id
+        Log.i("아이디값", linkID)
+        //linkID = "qWbHSOplcvY"
         init()
     }
 
@@ -84,10 +92,9 @@ class PostActivity : YouTubeBaseActivity() {
         post_recyclerview.layoutManager = layoutManager
 
         rdb = FirebaseDatabase.getInstance().getReference("Review").child("link")
-        val query = FirebaseDatabase.getInstance().reference.child("Review").child("link")
-            .limitToLast(50)
-        val option = FirebaseRecyclerOptions.Builder<ReviewInfo>()
-            .setQuery(query, ReviewInfo::class.java)
+        val query = FirebaseDatabase.getInstance().getReference("Review").child("link").child(linkID)
+        val option = FirebaseRecyclerOptions.Builder<Review_linkInfo>()
+            .setQuery(query, Review_linkInfo::class.java)
             .build()
         postAdapter = PostAdapter(option)
         post_recyclerview.adapter = postAdapter
@@ -97,17 +104,20 @@ class PostActivity : YouTubeBaseActivity() {
 
         //리뷰 기능
         add_post.setOnClickListener {
-            if(post_content.text.toString() == null || new_score.rating == null ||
-                    new_spicy.rating == null){//리뷰 안 적은 경우
+            if(post_content.text.toString() == ""){//리뷰 안 적은 경우
 
             }
             else{
-                val newPost = ReviewInfo(ID, link, post_content.text.toString(), new_score.rating, new_spicy.rating)
-                var rdatabase = FirebaseDatabase.getInstance().getReference("Review").child("link")
+                val newPost = Review_linkInfo(ID, post_content.text.toString(), new_score.rating, new_spicy.rating)
+                var rdatabase = FirebaseDatabase.getInstance().getReference("Review")
+
+                //유튜브 링크별 리뷰 추가
+                rdatabase.child("link").child(linkID).push().setValue(newPost)
 
                 //review - link - 링크주소 - 리뷰 정보 순으로 데이터베이스
                 //시간 순으로 추가되게끔 데베 추가
-                rdatabase.setValue(newPost)
+                val newPost2 = ReviewInfo(ID, link, post_content.text.toString(), new_score.rating, new_spicy.rating, title)
+                rdatabase.child("time").push().setValue(newPost2)
 
                 //리뷰 입력창 초기화
                 post_content.text = null
@@ -115,7 +125,14 @@ class PostActivity : YouTubeBaseActivity() {
                 new_spicy.rating = 0.0f
 
 
+                //recyclerview 갱신
+                postAdapter.notifyDataSetChanged()
             }
+        }
+
+        //상단에 화살표 클릭했을 때
+        post_back.setOnClickListener {
+            finish()
         }
     }
 

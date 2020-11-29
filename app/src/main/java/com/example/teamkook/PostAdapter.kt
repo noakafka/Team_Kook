@@ -1,5 +1,6 @@
 package com.example.teamkook
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class PostAdapter (options : FirebaseRecyclerOptions<ReviewInfo>)
-    :FirebaseRecyclerAdapter<ReviewInfo, PostAdapter.ViewHolder>(options){
+class PostAdapter (options : FirebaseRecyclerOptions<Review_linkInfo>)
+    :FirebaseRecyclerAdapter<Review_linkInfo, PostAdapter.ViewHolder>(options){
 
     inner class ViewHolder(itemView: View)
         : RecyclerView.ViewHolder(itemView){
@@ -27,13 +28,14 @@ class PostAdapter (options : FirebaseRecyclerOptions<ReviewInfo>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.row_review, parent, false)
+            .inflate(R.layout.row_post, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: ReviewInfo) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Review_linkInfo) {
         holder.comment.text = model.content
         holder.commentscore.rating = model.rating
         holder.commentspicy.rating = model.spicy
     }
+
 }

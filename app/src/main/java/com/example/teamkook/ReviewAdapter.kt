@@ -21,16 +21,16 @@ class ReviewAdapter (options : FirebaseRecyclerOptions<ReviewInfo>)
     inner class ViewHolder(itemView : View)
         : RecyclerView.ViewHolder(itemView){
         var reviewImage : ImageView
-        var reviewYoutube : TextView
         var reviewContent : TextView
         var reviewScore : RatingBar
         var reviewSpicy : RatingBar
+        var youtubetitle : TextView
         init{
             reviewImage = itemView.findViewById(R.id.review_image)
-            reviewYoutube = itemView.findViewById(R.id.review_youtube)
             reviewContent = itemView.findViewById(R.id.review_content)
             reviewScore = itemView.findViewById(R.id.rating_score)
             reviewSpicy = itemView.findViewById(R.id.rating_spicy)
+            youtubetitle = itemView.findViewById(R.id.review_youtube)
             itemView.setOnClickListener {
                 itemClickListener?.onReviewItemClick(itemView, adapterPosition)
             }
@@ -60,17 +60,18 @@ class ReviewAdapter (options : FirebaseRecyclerOptions<ReviewInfo>)
         holder.reviewContent.text = model.content
         holder.reviewScore.rating = model.rating
         holder.reviewSpicy.rating = model.spicy
-        when(position){
-            0 -> {
-                holder.reviewYoutube.text = "성공률 100% 돼지고기 김치찌개"
-            }
-            1->{
-                holder.reviewYoutube.text = "성공률 100% 돼지고기 김치찌개"
-            }
-            2->{
-                holder.reviewYoutube.text = "된장찌개 '1' (제일 쉬운 버전)"
-            }
-        }
+        holder.youtubetitle.text = model.title
+//        when(position){
+//            0 -> {
+//                holder.reviewYoutube.text = "성공률 100% 돼지고기 김치찌개"
+//            }
+//            1->{
+//                holder.reviewYoutube.text = "성공률 100% 돼지고기 김치찌개"
+//            }
+//            2->{
+//                holder.reviewYoutube.text = "된장찌개 '1' (제일 쉬운 버전)"
+//            }
+//        }
     }
 }
 
