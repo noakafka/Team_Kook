@@ -102,7 +102,7 @@ class Fragment_B(var c: Context) : Fragment() {
                 .setPositiveButton("확인",
                     DialogInterface.OnClickListener { dialog, id ->
                         //dialog.dismiss()
-                        Toast.makeText(c,checkboxes[0]+ checkboxes[1],Toast.LENGTH_SHORT).show()
+                       // Toast.makeText(c,checkboxes[0]+ checkboxes[1],Toast.LENGTH_SHORT).show()
                     })
 
             val alert = dialogBuilder.create()
@@ -138,44 +138,12 @@ class Fragment_B(var c: Context) : Fragment() {
             })
             database.child("search word").push().setValue(search_edit.text.toString())
 
-            val database=mDatabase.getReference("Accounts").child(ID)
-            if(checkboxes!=null){
-                database.child("search filter").addValueEventListener(object : ValueEventListener {
-                    /////////////////////////////////////////////////////////////////////////////////////////////
-                    //onDataChange not working --> 데이터베이스에 추가 안됨ㅠ
-                    override fun onDataChange(snapshot: DataSnapshot) {
-//                        for (i in 0 until checkboxes.size) {
-//                            if(snapshot.key.toString()==checkboxes[i]){
-//                                var num=snapshot.value.toString().toInt()
-//                                database.child("search filter").child(checkboxes[i]).setValue(num.toString())
-//                            }else{
-//                                database.child("search filter").child(checkboxes[i]).setValue(0.toString())
-//                            }
-//                        }
-                        for (i in 0 until checkboxes.size) {
-                            for (shot in snapshot.children) {
-                                //검색 필터 데이터베이스에 추가
-                                   if(shot.key.toString()==checkboxes[i]){
-                                       var num=shot.value.toString().toInt()
-                                       database.child("search filter").child(checkboxes[i]).setValue(num.toString())
-                                   }else{
-                                       database.child("search filter").child(checkboxes[i]).setValue(0.toString())
-                                   }
-                               }
-                        }
-                    }
-                    /////////////////////////////////////////////////////////////////////////////////////////////
-                    override fun onCancelled(error: DatabaseError) {
-                        //TODO("Not yet implemented")
-                        Log.e("database error", error.message)
-                    }
-                })
                 //검색어 합치기
                 for (i in 0 until checkboxes.size) {
                     search_str+=checkboxes[i]+" "
                 }
                 checkboxes.clear()
-            }
+
 
 
             //검색어 합치기
