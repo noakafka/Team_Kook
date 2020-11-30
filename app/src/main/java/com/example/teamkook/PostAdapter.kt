@@ -26,6 +26,7 @@ class PostAdapter (options : FirebaseRecyclerOptions<Review_linkInfo>)
         }
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.row_post, parent, false)

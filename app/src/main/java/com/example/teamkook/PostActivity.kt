@@ -12,6 +12,7 @@ import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
+import com.google.android.youtube.player.internal.i
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_post.*
@@ -22,7 +23,7 @@ import org.jsoup.select.Elements
 import java.lang.ref.WeakReference
 import java.net.URL
 
-class PostActivity : YouTubeBaseActivity() {
+class PostActivity : YouTubeBaseActivity(){
 
     lateinit var youtubeViewer : YouTubePlayerView
     lateinit var link : String //유튜브 링크
@@ -68,31 +69,13 @@ class PostActivity : YouTubeBaseActivity() {
     }
 
     fun init(){
-        youtubeViewer.initialize("temp", object : YouTubePlayer.OnInitializedListener{
-            override fun onInitializationSuccess(
-                provider: YouTubePlayer.Provider?,
-                player: YouTubePlayer?,
-                wasRestored: Boolean
-            ) {
-                if(!wasRestored){
-                    player?.cueVideo(linkID)
-                }
-            }
-
-            override fun onInitializationFailure(
-                p0: YouTubePlayer.Provider?,
-                p1: YouTubeInitializationResult?
-            ) {
-
-            }
-        })
 
 
         layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         post_recyclerview.layoutManager = layoutManager
 
         rdb = FirebaseDatabase.getInstance().getReference("Review").child("link")
-        val query = FirebaseDatabase.getInstance().getReference("Review").child("link").child(linkID)
+        val query = FirebaseDatabase.getInstance().getReference("Review").child("link").child(linkID).limitToLast(50)
         val option = FirebaseRecyclerOptions.Builder<Review_linkInfo>()
             .setQuery(query, Review_linkInfo::class.java)
             .build()
@@ -100,7 +83,7 @@ class PostActivity : YouTubeBaseActivity() {
         post_recyclerview.adapter = postAdapter
 
 
-        //startTask()
+        initYoutubeInfo()
 
         //리뷰 기능
         add_post.setOnClickListener {
@@ -134,25 +117,78 @@ class PostActivity : YouTubeBaseActivity() {
         post_back.setOnClickListener {
             finish()
         }
+
+
+        youtubeViewer.initialize("temp", object : YouTubePlayer.OnInitializedListener{
+            override fun onInitializationSuccess(
+                provider: YouTubePlayer.Provider?,
+                player: YouTubePlayer?,
+                wasRestored: Boolean
+            ) {
+                if(!wasRestored){
+                    player?.cueVideo(linkID)
+                }
+            }
+
+            override fun onInitializationFailure(
+                p0: YouTubePlayer.Provider?,
+                p1: YouTubeInitializationResult?
+            ) {
+
+            }
+        })
+
+
+
+        //폴더에 추가할 때
+        add_post.setOnClickListener {
+            //폴더에 이미 추가되어 있는지 확인
+            var check : Boolean = false
+
+            if(check){
+                val dlg = ChooseFolderDialog(this)
+                dlg.init(ID)
+            }
+        }
     }
 
 
-    fun startTask(){
-        val task = MyAsyncTask(this)
-        task.execute()
+    fun initYoutubeInfo(){
+        var youtube = url1+linkID+url2
+        val task = MyAsyncTask(youtube, object : MyAsyncTask.AsyncResponse{
+            override fun readyToSetTitle(title: String, description: String) {
+                youtube_title.text = title
+                youtube_info.text = description
+                Log.i("title11", title)
+                Log.i("descrip", description)
+            }
+        })
     }
+//    fun startTask(){
+//        val task = MyAsyncTask(this)
+//        task.execute()
+//    }
 
-    fun dataChanged(){
-        youtube_title.text = title
-        youtube_info.text = description
-    }
-    class MyAsyncTask(context:PostActivity) : AsyncTask<Unit, Unit, Unit>(){
-        val activityReference = WeakReference(context)
+//    fun dataChanged(){
+//        youtube_title.text = title
+//        youtube_info.text = description
+//    }
+    class MyAsyncTask( url : String, asyncResponse : AsyncResponse) : AsyncTask<Unit, Unit, Unit>(){
+
+        var response : AsyncResponse? = asyncResponse
+        //val activityReference = WeakReference(context)
+        var youtubetitle : String = ""
+        var youtubedescription : String = ""
+        var url = url
+        interface AsyncResponse{
+            fun readyToSetTitle(title : String, description : String )
+        }
         override fun doInBackground(vararg params: Unit?) {
-            val activity = activityReference.get()
-            var argUrl = activity?.url1 + activity?.linkID + activity?.url2
+            //val activity = activityReference.get()
+            //var argUrl = activity?.url1 + activity?.linkID + activity?.url2
+            var argUrl = url
             val infoURL = URL(argUrl)
-            val doc = Jsoup.connect(infoURL.toString()).parser(Parser.xmlParser()).get()
+            val doc = Jsoup.connect(infoURL.toString()).parser(Parser.xmlParser()).ignoreContentType(true).get()
             var search : Elements
             search = doc.select("items")
             if(search.size<=0){
@@ -160,10 +196,12 @@ class PostActivity : YouTubeBaseActivity() {
             }
             else{
                 for (info in search){
-                    val title = info.select("title")
-                    val description = info.select("description")
-                    activity?.title = title.toString()
-                    activity?.description = description.toString()
+                    val snippet = info.select("snippet")
+
+                    val title = snippet.select("title")
+                    val description = snippet.select("description")
+                    youtubetitle = title.toString()
+                    youtubedescription = description.toString()
 
                 }
             }
@@ -171,8 +209,7 @@ class PostActivity : YouTubeBaseActivity() {
 
         override fun onPostExecute(result: Unit?) {
             super.onPostExecute(result)
-            val activity = activityReference.get()
-            activity?.dataChanged()
+            response!!.readyToSetTitle(youtubetitle, youtubedescription)
         }
 
     }
