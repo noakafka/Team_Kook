@@ -26,12 +26,13 @@ import kotlin.collections.ArrayList
  */
 class Fragment_B(var c: Context) : Fragment() {
 
-    val arr = arrayListOf<String>("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
     val mDatabase= FirebaseDatabase.getInstance()
     lateinit var ID:String
     var checkboxes= ArrayList<String>() //체크박스 항목 추가
     val data= arrayListOf<String>("초보","매운","백종원 레시피","김수미 레시피","만개의 레시피","다이어트","비건")
     var search_str=""
+    var rank = arrayListOf<String>()
+    var arr = arrayListOf<String>("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -192,18 +193,59 @@ class Fragment_B(var c: Context) : Fragment() {
     }
 
     fun add_realtime_key(){
-        for(str in arr){
-            val text = TextView(c)
-            text.text = str
-            text.textSize = 22f
-            val params = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            params.bottomMargin = 20
-            text.layoutParams = params
-            realtime_keywords.addView(text)
+
+        // get data to arr
+
+        // db에서 max cnt를 불러오기
+
+
+        val CountListener = object : ValueEventListener{
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var food = arrayListOf<food_count>()
+                for(item in dataSnapshot.children){
+                    var temp_food : food_count = food_count(item.key.toString(), item.child("count").value.toString().toInt())
+                    food.add(temp_food)
+                    //Log.e("db", item.child("count").value.toString())
+                }
+                //food를 sort as "count" DESC
+                food.sortWith(Comparator { data1, data2 -> data2.count-data1.count})
+                for(i in 0..9){
+                    Log.e("db", food[i].name + " : " + food[i].count.toString())
+                    rank.add(food[i].name)
+                }
+                for(i in rank.indices){
+                    val ttext = TextView(c)
+                    ttext.id = i
+                    if(i == 9){
+                        ttext.text = arr[i] + ". " + rank[i]
+                    }
+                    else{
+                        ttext.text = arr[i] + ".   " + rank[i]
+                    }
+
+                    ttext.textSize = 22f
+                    ttext.setOnClickListener {
+                        search_edit.setText(rank[ttext.id])
+                    }
+                    val params = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    params.bottomMargin = 20
+                    ttext.layoutParams = params
+                    realtime_keywords.addView(ttext)
+                }
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
         }
+
+        val database = mDatabase.getReference("Foods")
+        database.addValueEventListener(CountListener)
+
     }
 
 
