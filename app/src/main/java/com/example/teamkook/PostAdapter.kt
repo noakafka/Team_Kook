@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class PostAdapter (options : FirebaseRecyclerOptions<Review_linkInfo>)
-    :FirebaseRecyclerAdapter<Review_linkInfo, PostAdapter.ViewHolder>(options){
+class PostAdapter (var post : ArrayList<Review_linkInfo>)
+    :RecyclerView.Adapter<PostAdapter.ViewHolder>(){
 
     inner class ViewHolder(itemView: View)
         : RecyclerView.ViewHolder(itemView){
@@ -33,10 +33,15 @@ class PostAdapter (options : FirebaseRecyclerOptions<Review_linkInfo>)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Review_linkInfo) {
-        holder.comment.text = model.content
-        holder.commentscore.rating = model.rating
-        holder.commentspicy.rating = model.spicy
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.comment.text = post[position].content
+        holder.commentscore.rating = post[position].rating
+        holder.commentspicy.rating = post[position].spicy
+    }
+
+    override fun getItemCount(): Int {
+        return post.size
     }
 
 }

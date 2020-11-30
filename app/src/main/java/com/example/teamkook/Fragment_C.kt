@@ -49,7 +49,6 @@ class Fragment_C() : Fragment() {
         init()
     }
     fun init(){
-
         layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         review_recyclerview.layoutManager = layoutManager
 
@@ -65,7 +64,7 @@ class Fragment_C() : Fragment() {
         reviewAdapter = ReviewAdapter(option)
         reviewAdapter.itemClickListener = object : ReviewAdapter.OnItemClickListener{
             override fun onReviewItemClick(view: View, position: Int) {
-                val id = this@Fragment_C.id
+                val id = this@Fragment_C.ID
                 val link = reviewAdapter.getItem(position).link
                 Log.i("frag_C link", link)
                 var i = Intent(activity, PostActivity::class.java)

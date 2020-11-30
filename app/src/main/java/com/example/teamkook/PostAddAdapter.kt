@@ -1,19 +1,25 @@
 package com.example.teamkook
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class PostAddAdapter (var folders : ArrayList<String>)
     : RecyclerView.Adapter<PostAddAdapter.MyViewHolder>(){
     var itemClickListener : OnItemClickListener ?=null
+    var selected: Int = -1
     inner class MyViewHolder (itemView : View)
         :RecyclerView.ViewHolder(itemView){
         var folderName : TextView
+        var folderImage : ImageView
         init{
             folderName = itemView.findViewById(R.id.post_folder_name)
+            folderImage = itemView.findViewById(R.id.image_folder)
             itemView.setOnClickListener {
                 itemClickListener?.onItemClick(itemView, adapterPosition)
             }
@@ -31,6 +37,14 @@ class PostAddAdapter (var folders : ArrayList<String>)
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.folderName.text = folders[position]
+        if(position == selected){
+            holder.folderImage.imageTintList = ColorStateList.valueOf(Color.parseColor("FFFAFAFA"))
+            holder.folderName.setTextColor(ColorStateList.valueOf(Color.parseColor("FFFAFAFA")))
+        }
+        else{
+            holder.folderImage.imageTintList = ColorStateList.valueOf(Color.parseColor("E48C34"))
+            holder.folderName.setTextColor(ColorStateList.valueOf(Color.parseColor("E48C34")))
+        }
     }
 
     override fun getItemCount(): Int {
