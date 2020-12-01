@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="RatingSpicy" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/pepper</item>
+    </style>
 </resources>

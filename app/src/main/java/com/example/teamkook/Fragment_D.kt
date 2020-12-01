@@ -76,6 +76,7 @@ class Fragment_D(var c: Context) : Fragment() {
                 first_favorite.setOnClickListener {
                     var intent = Intent(c, InFolderActivity::class.java)
                     intent.putExtra("f_name", first_favorite_name.text.toString())
+                    intent.putExtra("id", ID)
                     startActivity(intent)
                 }
             }
@@ -85,6 +86,7 @@ class Fragment_D(var c: Context) : Fragment() {
                 second_favorite.setOnClickListener {
                     var intent = Intent(c, InFolderActivity::class.java)
                     intent.putExtra("f_name", second_favorite_name.text.toString())
+                    intent.putExtra("id", ID)
                     startActivity(intent)
                 }
             }
@@ -94,6 +96,7 @@ class Fragment_D(var c: Context) : Fragment() {
                 third_favorite.setOnClickListener {
                     var intent = Intent(c, InFolderActivity::class.java)
                     intent.putExtra("f_name", third_favorite_name.text.toString())
+                    intent.putExtra("id", ID)
                     startActivity(intent)
                 }
             }
