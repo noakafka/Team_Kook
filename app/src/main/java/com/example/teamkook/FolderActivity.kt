@@ -56,6 +56,7 @@ class FolderActivity() : AppCompatActivity() {
         adapter = Folder_Adapter(applicationContext, folder_data){ folder ->
             var intent = Intent(applicationContext, InFolderActivity::class.java)
             intent.putExtra("f_name", folder.folder_name)
+            intent.putExtra("id", _id)
             startActivityForResult(intent, 0)
         }
         var layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)

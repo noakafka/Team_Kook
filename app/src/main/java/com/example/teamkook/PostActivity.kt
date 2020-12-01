@@ -25,6 +25,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.ref.WeakReference
 import java.net.URL
+import javax.xml.transform.Source
 
 class PostActivity : YouTubeBaseActivity(){
 
@@ -40,6 +41,7 @@ class PostActivity : YouTubeBaseActivity(){
     var title = ""
     var description = ""
 
+    var addFolder : Boolean = false
     lateinit var postAdapter: PostAdapter
     lateinit var rdb :DatabaseReference
     lateinit var layoutManager : LinearLayoutManager
@@ -72,18 +74,37 @@ class PostActivity : YouTubeBaseActivity(){
     }
 
     fun init(){
-
+        layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        post_recyclerview.layoutManager = layoutManager
         rdb = FirebaseDatabase.getInstance().getReference("Review").child("link")
+
+
         var array_post : ArrayList<Review_linkInfo> = ArrayList<Review_linkInfo>()
-        val rdatabase = rdb.child(linkID).limitToLast(50)
+
+
+        val rdatabase = rdb
         rdatabase.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(snap in snapshot.children){
-                    val post = snap.getValue(Review_linkInfo::class.java)
-                    if(post!=null){
-                        array_post.add(post)
+                    Log.i("순서", "1")
+                    if(snap.key.equals(linkID)){
+                        Log.i("순서", "2")
+                        for(review in snap.children){
+                            Log.i("순서", "3")
+
+                            array_post.add(Review_linkInfo(review.child("id").getValue().toString(),
+                            review.child("content").getValue().toString(), review.child("rating").getValue().toString().toFloat()
+                            , review.child("spicy").getValue().toString().toFloat()))
+//                            val post = review.getValue(Review_linkInfo::class.java)
+//                            if(post!=null){
+//                            }
+                            Log.i("post개수", array_post.size.toString())
+                        }
                     }
+
+
                 }
+                postAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -92,11 +113,10 @@ class PostActivity : YouTubeBaseActivity(){
 
         })
 
-        layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        post_recyclerview.layoutManager = layoutManager
 
 
         postAdapter = PostAdapter(array_post)
+
         post_recyclerview.adapter = postAdapter
 
 
@@ -105,7 +125,7 @@ class PostActivity : YouTubeBaseActivity(){
         //리뷰 기능
         add_post.setOnClickListener {
             if(post_content.text.toString() == ""){//리뷰 안 적은 경우
-
+                Toast.makeText(this, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
             else{
                 val newPost = Review_linkInfo(ID, post_content.text.toString(), new_score.rating, new_spicy.rating)
@@ -132,6 +152,18 @@ class PostActivity : YouTubeBaseActivity(){
 
         //상단에 화살표 클릭했을 때
         post_back.setOnClickListener {
+//            FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder").child("한식").push().setValue(
+//                Folder("한식", "https://www.youtube.com/watch?v=qWbHSOplcvY")
+//            )
+//            FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder").child("한식").push().setValue(
+//                Folder("한식", "https://www.youtube.com/watch?v=t4Es8mwdYlE")
+//            )
+//            FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder").child("맛집").push().setValue(
+//                Folder("맛집", "https://www.youtube.com/watch?v=qWbHSOplcvY")
+//            )
+//            FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder").child("맛집").push().setValue(
+//                Folder("맛집", "https://www.youtube.com/watch?v=t4Es8mwdYlE")
+//            )
             finish()
         }
 
@@ -159,30 +191,43 @@ class PostActivity : YouTubeBaseActivity(){
 
         //폴더에 추가할 때
         add_folder.setOnClickListener {
-            //폴더에 이미 추가되어 있는지 확인
-            val rdatabase = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder")
-            rdatabase.addValueEventListener(object : ValueEventListener {
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    var fname : String = ""
-                    var check : Boolean = false
-                    for(foldername in snapshot.children){
-                        for(folder in foldername.children){
-                            val list=folder.getValue(Folder::class.java)
-                            if (list != null) {
-                                if(link.equals(list.link)){//이미 추가되어 있는 경우
-                                    check = true
-                                    fname = list.folder_name!!
+            addFolder = true
+            if(addFolder){
+                //폴더에 이미 추가되어 있는지 확인
+                val rdatabase = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder")
+                rdatabase.addValueEventListener(object : ValueEventListener {
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(addFolder){
+                            var fname : String = ""
+                            var check : Boolean = false
+                            for(foldername in snapshot.children){
+                                for(folder in foldername.children){
+                                    val list=folder.getValue(Folder::class.java)
+                                    if (list != null) {
+                                        if(link.equals(list.link)){//이미 추가되어 있는 경우
+                                            check = true
+                                            fname = list.folder_name!!
+
+                                        }
+                                    }
                                 }
                             }
+
+                            addFolder = false
+                            callDialog(check, fname)
                         }
+
+
                     }
-                    callDialog(check, fname)
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    //
-                }
-            })
+
+                    override fun onCancelled(error: DatabaseError) {
+                        //
+                    }
+                })
+            }
+
 
         }
     }
@@ -197,16 +242,18 @@ class PostActivity : YouTubeBaseActivity(){
             dlg.init(ID, link, title)
         }
         else{
-            var deleted : Boolean = false
+            //var deleted : Boolean = false
             var deletequery = rdatabase.child(fileName).orderByChild("link").equalTo(link)
             deletequery.addListenerForSingleValueEvent(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()){//링크가 존재하는 경우
                         for(snap in snapshot.children){
                             snap.ref.removeValue()
-                            deleted = true
+                            //deleted = true
 
                         }
+                        Toast.makeText(this@PostActivity, "폴더에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+
                     }
                 }
 
@@ -215,9 +262,6 @@ class PostActivity : YouTubeBaseActivity(){
                 }
 
             })
-            if(deleted){
-                Toast.makeText(this, "폴더에서 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-            }
         }
     }
     fun initYoutubeInfo(){
@@ -261,6 +305,7 @@ class PostActivity : YouTubeBaseActivity(){
             //val infoURL = URL(argUrl)
             Log.i("url 확인", argUrl)
             val doc = URL(argUrl).openStream()
+
             val read = BufferedReader(InputStreamReader(doc, "UTF-8"))
             jsonData = read.readLine()
             Log.i("json", jsonData)

@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.renderscript.Sampler
 import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -16,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_in_folder.*
 class InFolderActivity : AppCompatActivity() {
 
     lateinit var adapter : InFolderAdapter
-    var ID : String = "ldh1"
+    var ID : String = ""
     var folderName : String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class InFolderActivity : AppCompatActivity() {
         if(intent.hasExtra("id")){
             ID = intent.getStringExtra("id")
         }
+        Log.i("infolderID", ID)
         back_btn.setOnClickListener {
             finish()
         }
@@ -34,6 +37,7 @@ class InFolderActivity : AppCompatActivity() {
 
     }
     fun init(){
+        initSwipe()
         top_folder_name.text = folderName
 
         var array_in_folder : ArrayList<Folder> = ArrayList<Folder>()
@@ -42,11 +46,14 @@ class InFolderActivity : AppCompatActivity() {
         rdatabase.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(snap in snapshot.children){
+
                     val file = snap.getValue(Folder::class.java)
                     if(file!=null){
                         array_in_folder.add(file)
                     }
                 }
+                    //adapter.notifyDataSetChanged()
+                Log.i("infolder 개수", array_in_folder.size.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -55,10 +62,10 @@ class InFolderActivity : AppCompatActivity() {
 
         })
         in_folder_rview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        adapter = InFolderAdapter(this, array_in_folder)
+        adapter = InFolderAdapter(this, array_in_folder, ID)
         adapter.itemClickListener = object :InFolderAdapter.OnItemClickListener{
             override fun onItemClick(view: View, position: Int) {
-                var i = Intent(this@InFolderActivity, FolderActivity::class.java)
+                var i = Intent(this@InFolderActivity, PostActivity::class.java)
                 i.putExtra("id", ID)
                 i.putExtra("link", adapter.items[position].link)
                 startActivity(i)
@@ -68,5 +75,47 @@ class InFolderActivity : AppCompatActivity() {
         }
         in_folder_rview.adapter = adapter
 
+    }
+
+    fun initSwipe(){
+        val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
+        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.adapterPosition
+                    if(direction == ItemTouchHelper.LEFT){//왼쪽으로 밀었을 때
+                        val rdatabase = FirebaseDatabase.getInstance().getReference("Accounts")
+                        var deletequery = rdatabase.child(ID).child("Folder").child(folderName)
+                            .orderByChild("link").equalTo(adapter.items[position].link)
+                        deletequery.addListenerForSingleValueEvent(object :ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if(snapshot.exists()){//링크가 존재하는 경우
+                                    for(snap in snapshot.children){
+                                        snap.ref.removeValue()
+                                        break
+                                    }
+                                }
+                                adapter.notifyDataSetChanged()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                //TODO("Not yet implemented")
+                            }
+
+                        })
+                    }
+                }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(in_folder_rview)
     }
 }

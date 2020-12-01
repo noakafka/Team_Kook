@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.youtube.player.internal.v
 import com.google.firebase.database.*
 
-class ChooseFolderDialog (context: Context){
+class    ChooseFolderDialog (context: Context){
     lateinit var rdatabase : DatabaseReference
     lateinit var recyclerAdapter : PostAddAdapter
     lateinit var recyclerView: RecyclerView
@@ -28,25 +28,22 @@ class ChooseFolderDialog (context: Context){
     fun init(ID : String, url : String, title : String){
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dlg.setContentView(R.layout.post_add_folder_dialog)
-
+        dlg.setCancelable(false)
 
 
         recyclerView = dlg.findViewById(R.id.choose_recyclerview)
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recyclerAdapter = PostAddAdapter(ArrayList<String>())
-
         rdatabase = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder")
-
+        var folder_name : ArrayList<String> = ArrayList<String>()
         //폴더 이름들 받아와서 arraylist에 넣어주기
         val database=rdatabase
         database.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(folder in snapshot.children){
-                    if(folder.key.toString()=="Folder"){
-                        recyclerAdapter.folders.add(folder.key.toString())
-                    }
+                    folder_name.add(folder.key.toString())
                 }
+                recyclerAdapter.notifyDataSetChanged()
             }
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -54,11 +51,20 @@ class ChooseFolderDialog (context: Context){
         })
 
 
+        recyclerAdapter = PostAddAdapter(folder_name)
         recyclerAdapter.itemClickListener = object : PostAddAdapter.OnItemClickListener{
             override fun onItemClick(view: View, position: Int) {
                 //recyclerview에서 폴더 선택했을 때
-                currentChoose = position
-                recyclerAdapter.selected = position
+                if(position == recyclerAdapter.selected){
+                    currentChoose = -1
+                    recyclerAdapter.selected = -1
+                }
+                else{
+                    currentChoose = position
+                    recyclerAdapter.selected = position
+                }
+
+                recyclerAdapter.notifyDataSetChanged()
 
             }
 

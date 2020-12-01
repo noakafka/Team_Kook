@@ -15,7 +15,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import org.w3c.dom.Text
 
-class InFolderAdapter (val context: Context, var items:ArrayList<Folder>): RecyclerView.Adapter<InFolderAdapter.ViewHolder>() {
+class InFolderAdapter (val context: Context, var items:ArrayList<Folder>, var ID : String): RecyclerView.Adapter<InFolderAdapter.ViewHolder>() {
+
 
     var itemClickListener:OnItemClickListener ?= null
     interface OnItemClickListener{
@@ -49,16 +50,19 @@ class InFolderAdapter (val context: Context, var items:ArrayList<Folder>): Recyc
 
 
         //이 게시물에 가장 최근 댓글
-        val rdatabase = FirebaseDatabase.getInstance().getReference("Review").child("link").child(items[position].link!!)
-        val query = rdatabase.orderByChild("id").equalTo("ldh1")//////////////
+        val rdatabase = FirebaseDatabase.getInstance().getReference("Review").child("link").child(id)
+        val query = rdatabase.orderByChild("id").equalTo(ID)//////////////
         query.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+
+                //Log.i("단계", "1")
                 if(snapshot.exists()){
+                    //Log.i("단계", "2")
                     for(snap in snapshot.children){
-                        val content = snap.ref.child("content").key
+                        val content = snap.child("content").getValue().toString()
                         Log.i("content", content)
 
-                        holder.content.text = ""
+                        holder.content.text = content
 
                     }
                 }
