@@ -11,6 +11,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.lang.NumberFormatException
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FoodClassification(val inputstream1:InputStream, val context: Context):
 SQLiteOpenHelper(context,DB_NAME,null,DB_VERSION){
@@ -121,11 +122,21 @@ SQLiteOpenHelper(context,DB_NAME,null,DB_VERSION){
     //사용법 : FoodClassification 객체 생성 후
     //해당 객체.recommendRandom() 으로 사용 후 이름하고 키워드는 스페이스로 스플릿해서 가져다 쓰면 됨
     //recommendRandom parameter로 추천 기준 String으로 넣어줘야함.
-    fun recommendRandom(standard: String,num:Int):String?{ //랜덤 메뉴 추천, 메뉴 이름과 comment 반환
-        val strsql="select * from "+ TABLE_NAME+" where "+ standard +" = \'" + 1 + "\'" //쿼리문이 잘못되었나?
+    fun recommendRandom(standard: ArrayList<String>):String?{ //랜덤 메뉴 추천, 알러지 내역을 arraylist로 받은 후에 테이블 쿼리 생성
+        // 메뉴 이름과 comment 반환
+        //standard는 알러지 있는 항목들이므로 where절에서 0
+        var strsql="select * from "+ TABLE_NAME
+        if(standard.size>0){
+            strsql+=" where "
+            for(i in 0 until standard.size-1){
+                strsql+= standard[i] +" = \'" + 0 + "\'"+" and "
+
+            }
+            strsql+=standard[standard.lastIndex] +" = \'" + 0 + "\'"
+        }
+        //standard가 비어있으면 그냥 전체 검색임
         val db=this.readableDatabase
         val cursor=db.rawQuery(strsql,null)
-        ///////////////////////cursor.count가 0이라서 계속 null return///////////////////////////////////////
         if(cursor.count!=0)
         {
             val rand= Random().nextInt(cursor.count)+1
@@ -135,6 +146,31 @@ SQLiteOpenHelper(context,DB_NAME,null,DB_VERSION){
             cursor.close()
             db.close()
             return comment+" "+name //음식명이랑 코멘트 키워드 반환
+        }
+        cursor.close()
+        db.close()
+        return null
+    }
+
+    fun recommendCondition(condition:String, check:Int, standard: ArrayList<String>):String?{
+        var strsql="select * from "+ TABLE_NAME + " where "+condition +" = \'" + check + "\'"
+        if(standard!=null){
+            for(i in 0 until standard.size){
+                strsql+= " and "+standard[i] +" = \'" + 0 + "\'"
+            }
+        }
+        //standard가 비어있으면 그냥 전체 검색임
+        val db=this.readableDatabase
+        val cursor=db.rawQuery(strsql,null)
+        if(cursor.count!=0)
+        {
+            val rand= Random().nextInt(cursor.count)+1
+            cursor.move(rand)
+            val name=cursor?.getString(1)
+            val comment=cursor?.getString(2)
+            cursor.close()
+            db.close()
+            return comment+" "+name
         }
         cursor.close()
         db.close()
