@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -16,12 +18,14 @@ import com.google.android.youtube.player.internal.i
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.activity_user.*
+import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
 import org.jsoup.select.Elements
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.ref.WeakReference
 import java.net.URL
@@ -74,6 +78,9 @@ class PostActivity : YouTubeBaseActivity(){
     }
 
     fun init(){
+        var textView : TextView = findViewById(R.id.youtube_info)
+        textView.movementMethod = ScrollingMovementMethod()
+
         layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         post_recyclerview.layoutManager = layoutManager
         rdb = FirebaseDatabase.getInstance().getReference("Review").child("link")
@@ -120,7 +127,7 @@ class PostActivity : YouTubeBaseActivity(){
         post_recyclerview.adapter = postAdapter
 
 
-        //initYoutubeInfo()
+        initYoutubeInfo()
 
         //리뷰 기능
         add_post.setOnClickListener {
@@ -265,17 +272,48 @@ class PostActivity : YouTubeBaseActivity(){
         }
     }
     fun initYoutubeInfo(){
-        var youtube = url1+linkID+url2
-        Log.i("파싱", youtube)
-        val task = MyAsyncTask(youtube, object : MyAsyncTask.AsyncResponse{
-            override fun readyToSetTitle(title: String, description: String) {
-                youtube_title.text = title
-                youtube_info.text = description
-                Log.i("title11", title)
-                Log.i("descrip", description)
+        var youtubeURL = url1+linkID+url2
+
+        val client = OkHttpClient()
+        val request = Request.Builder().url(youtubeURL).build()
+
+        client.newCall(request).enqueue(object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.i("유튜브 파싱", "fail")
             }
+
+            override fun onResponse(call: Call, response: Response) {
+                val jsonData = response.body()?.string()
+                if(jsonData!=null){
+                    val jsonobj : JSONObject = JSONObject(jsonData)
+                    var json_arr : JSONArray = jsonobj.getJSONArray("items")
+                    var items : JSONObject = json_arr.getJSONObject(0)
+                    var snippet : JSONObject = items.getJSONObject("snippet")
+                    runOnUiThread {
+                        youtube_title.text = snippet.getString("title")
+                        youtube_info.text = "더보기) ".plus(snippet.getString("description"))
+                    }
+
+                    title = snippet.getString("title")
+                    Log.i("title11", snippet.getString("title"))
+                    Log.i("descrip", snippet.getString("description"))
+                    
+                }
+            }
+
         })
-        task.execute()
+
+
+
+//        val task = MyAsyncTask(youtube, object : MyAsyncTask.AsyncResponse{
+//            override fun readyToSetTitle(title: String, description: String) {
+//                youtube_title.text = title
+//                youtube_info.text = description
+//                Log.i("title11", title)
+//                Log.i("descrip", description)
+//            }
+//        })
+//        task.execute()
     }
 //    fun startTask(){
 //        val task = MyAsyncTask(this)
@@ -286,67 +324,5 @@ class PostActivity : YouTubeBaseActivity(){
 //        youtube_title.text = title
 //        youtube_info.text = description
 //    }
-    class MyAsyncTask( url : String, asyncResponse : AsyncResponse) : AsyncTask<Unit, Unit, Unit>(){
-
-        var response : AsyncResponse? = asyncResponse
-        //val activityReference = WeakReference(context)
-        var youtubetitle : String = ""
-        var youtubedescription : String = ""
-        var url = url
-        var jsonData : String = ""
-        interface AsyncResponse{
-            fun readyToSetTitle(title : String, description : String )
-        }
-
-        override fun doInBackground(vararg params: Unit?) {
-            //val activity = activityReference.get()
-            //var argUrl = activity?.url1 + activity?.linkID + activity?.url2
-            var argUrl = url
-            //val infoURL = URL(argUrl)
-            Log.i("url 확인", argUrl)
-            val doc = URL(argUrl).openStream()
-
-            val read = BufferedReader(InputStreamReader(doc, "UTF-8"))
-            jsonData = read.readLine()
-            Log.i("json", jsonData)
-//            val doc = Jsoup.connect(infoURL.toString()).parser(Parser.xmlParser()).ignoreContentType(true).get()
-//            var search : Elements
-//
-//            search = doc.select("items")
-//            Log.i("search사이즈", search.size.toString())
-//            if(search.size<=0){
-//                Log.i("youtubeInfo", "실패")
-//            }
-//            else{
-//                for (info in search){
-//                    val snippet = info.select("snippet")
-//
-//                    val title = snippet.select("title").text()
-//                    val description = snippet.select("description").text()
-//                    Log.i("유튜브파싱", title.toString())
-//                    Log.i("유튜브파싱2", description.toString())
-//
-//                    youtubetitle = title.toString()
-//                    youtubedescription = description.toString()
-//
-//                }
-//            }
-        }
-
-        override fun onPostExecute(result: Unit?) {
-            super.onPostExecute(result)
-            val json = JSONObject(jsonData)
-            val searchObject = json.getJSONArray("items")
-            val info = searchObject.getJSONObject(0)
-            val snippet = info.getJSONObject("snippet")
-            val title = snippet.getString("title")
-            val description = snippet.getString("description")
-
-
-            response!!.readyToSetTitle(title, description)
-            //response!!.readyToSetTitle(youtubetitle, youtubedescription)
-        }
-
-    }
 
 }

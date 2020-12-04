@@ -13,9 +13,15 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.activity_post.*
+import okhttp3.*
+import org.json.JSONArray
+import org.json.JSONObject
 import org.w3c.dom.Text
+import java.io.IOException
 
-class InFolderAdapter (val context: Context, var items:ArrayList<Folder>, var ID : String): RecyclerView.Adapter<InFolderAdapter.ViewHolder>() {
+class InFolderAdapter (val context: Context, var items:ArrayList<FolderMoreInfo>, var ID : String): RecyclerView.Adapter<InFolderAdapter.ViewHolder>() {
+
 
 
     var itemClickListener:OnItemClickListener ?= null
@@ -46,7 +52,7 @@ class InFolderAdapter (val context: Context, var items:ArrayList<Folder>, var ID
 
         //타이틀 파싱
 
-        holder.title.text = ""
+        holder.title.text = items[position].title
 
 
         //이 게시물에 가장 최근 댓글
