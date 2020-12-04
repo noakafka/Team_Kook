@@ -14,12 +14,19 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_in_folder.*
+import okhttp3.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
 
 class InFolderActivity : AppCompatActivity() {
 
     lateinit var adapter : InFolderAdapter
     var ID : String = ""
     var folderName : String = ""
+
+    val search1 = "https://www.googleapis.com/youtube/v3/videos?id="
+    val search2 = "&key=AIzaSyAONAWO0Dta_zwAnMMBmNqkwBjCgSNGVSU&part=snippet"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_in_folder)
@@ -40,7 +47,7 @@ class InFolderActivity : AppCompatActivity() {
         initSwipe()
         top_folder_name.text = folderName
 
-        var array_in_folder : ArrayList<Folder> = ArrayList<Folder>()
+        var array_in_folder : ArrayList<FolderMoreInfo> = ArrayList<FolderMoreInfo>()
         val rdatabase = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder")
             .child(folderName)
         rdatabase.addValueEventListener(object : ValueEventListener{
@@ -48,8 +55,40 @@ class InFolderActivity : AppCompatActivity() {
                 for(snap in snapshot.children){
 
                     val file = snap.getValue(Folder::class.java)
+
+
+
                     if(file!=null){
-                        array_in_folder.add(file)
+                        var id1 : String = file?.link!!.substring(file?.link!!.lastIndexOf("=")+1)
+                        var id2 :String= file?.link!!.substring(file?.link!!.lastIndexOf("/")+1)
+                        var id = id1;
+                        if(id2.length < id1.length)
+                            id = id2;
+                        var youtubeURL = search1+id+search2
+
+                        val client = OkHttpClient()
+                        val request = Request.Builder().url(youtubeURL).build()
+
+                        client.newCall(request).enqueue(object: Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                Log.i("유튜브 파싱", "fail")
+                            }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                val jsonData = response.body()?.string()
+                                if(jsonData!=null){
+                                    val jsonobj : JSONObject = JSONObject(jsonData)
+                                    var json_arr : JSONArray = jsonobj.getJSONArray("items")
+                                    var items : JSONObject = json_arr.getJSONObject(0)
+                                    var snippet : JSONObject = items.getJSONObject("snippet")
+
+                                    var youtube_title = snippet.getString("title")
+
+                                    array_in_folder.add(FolderMoreInfo(file.folder_name, file.link, youtube_title ))
+                                }
+                            }
+
+                        })
                     }
                 }
                     //adapter.notifyDataSetChanged()

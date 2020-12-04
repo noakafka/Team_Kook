@@ -60,26 +60,31 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:fillViewport="true">
+        android:layout_height="120dp"
+        android:layout_marginVertical="10dp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/youtube_info"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
 
             android:layout_marginHorizontal="20dp"
-            android:overScrollMode="ifContentScrolls" />
-    </ScrollView>
+            android:background="#F7F7F7"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="5dp"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:background="?android:attr/listDivider" />
 
     <LinearLayout
