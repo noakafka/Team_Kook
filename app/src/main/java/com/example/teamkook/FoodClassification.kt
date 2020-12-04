@@ -89,6 +89,7 @@ SQLiteOpenHelper(context,DB_NAME,null,DB_VERSION){
         values.put(CRUSTACEAN,item.crustacean)
         values.put(FLOUR,item.flour)
         values.put(PEACH,item.peach)
+        values.put(VEGAN,item.vegan)
         values.put(BREAKFAST,item.breakfast)
         values.put(LUNCH,item.lunch)
         values.put(DINNER,item.dinner)
@@ -110,7 +111,7 @@ SQLiteOpenHelper(context,DB_NAME,null,DB_VERSION){
         val create_table="create table if not exists "+TABLE_NAME+
         " ("+ ID +" integer primary key, "+NAME+" text, "+COMMENT+" text, "+
                 PEANUT+" integer, " + MILK+" integer, " + EGG+" integer, " + CRUSTACEAN+" integer, " + FLOUR+" integer, "+
-                PEACH+" integer, "+ BREAKFAST+" integer, "+ LUNCH+" integer, "+ DINNER+" integer, "+ RAIN+" integer, "+
+                PEACH+" integer, "+VEGAN +" integer, "+ BREAKFAST+" integer, "+ LUNCH+" integer, "+ DINNER+" integer, "+ RAIN+" integer, "+
                 SNOW+" integer, "+ HOT+" integer, "+ COLD+" integer, "+SPICY+" integer)"//
         Log.i("table query ",create_table)
         db?.execSQL(create_table) //sql 실행 질의
@@ -171,6 +172,23 @@ SQLiteOpenHelper(context,DB_NAME,null,DB_VERSION){
             cursor.close()
             db.close()
             return comment+" "+name
+        }
+        cursor.close()
+        db.close()
+        return null
+    }
+    
+    fun findIMG(name:String):String?{
+        val strsql="select * from "+ TABLE_NAME + " where "+ NAME +" = \'" + name + "\'"
+        val db=this.readableDatabase
+        val cursor=db.rawQuery(strsql,null)
+        if(cursor.count!=0)
+        {
+            cursor.moveToFirst()
+            val num=cursor?.getString(0)
+            cursor.close()
+            db.close()
+            return num
         }
         cursor.close()
         db.close()

@@ -2,6 +2,7 @@ package com.example.teamkook
 
 import android.content.Context
 import android.media.Image
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.row_recommend.*
 import java.io.InputStream
 import java.text.SimpleDateFormat
@@ -26,6 +30,8 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
 
     lateinit var foodRecommendation:FoodClassification
     var itemClickListener : OnItemClickListener ?= null
+    val storage=FirebaseStorage.getInstance("gs://team-kook.appspot.com")
+    val reference=storage.reference
     val commentArray= listOf<String>(
         "만약 오늘 힘든 일이 있으셨다면 제가 추천해주는 맛있는 음식들로 힘내보아요!",
         "오늘도 푸드서치와 함께 맛있는 요리를 해보세요:)",
@@ -81,9 +87,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
         var temp=0//0-추운 1-더운 --> 지금은 무조건 0으로 설정
         if(weather==1) temp=0
 
-        //각 키워드에 따른 문구 사용
-        //
-        //오늘은 날씨가 ##하네요 이런 날씨엔 oo이 딱이죠!
+
 
         when(info[position].index){ //상황 4개
             "0" -> {
@@ -128,19 +132,37 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("RAIN",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img2)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text ="비가 오는 날엔 뭐니뭐니 해도 "+str+"~~"
                     }
                     1->{
                         val str= foodRecommendation.recommendCondition("SNOW",1,standard)
                         holder.firstfood.text =str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img3)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text ="창 밖에 눈을 쳐다보면서 먹기에는 "+str+"이 제격!"
                     }
                     2->{
                         val str=foodRecommendation.recommendCondition("VEGAN",1,standard)
                         holder.firstfood.text =str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img3)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text ="오늘 날씨와 잘 어울리는 "+str+"를 드셔보세요!"
                     }
                 }
@@ -150,19 +172,37 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("BREAKFAST",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img2)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text ="아침부터 "+str+"은 최고의 선택:)"
                     }
                     1->{
                         val str=foodRecommendation.recommendCondition("LUNCH",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img3)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text = "점심에는 역시 든든한 "+str
                     }
                     2->{
                         val str=foodRecommendation.recommendCondition("DINNER",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img3)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text =str+" 묻고 더블로 가!"
                     }
                 }
@@ -172,13 +212,25 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("SPICY",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img2)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text ="매운 음식을 좋아하는군요! 오늘은 "+ str +"에 도전해 보는거 어떠세요?"
                     }
                     1->{
                         val str=foodRecommendation.recommendCondition("SPICY",0,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img3)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         if(standard.contains("VEGAN")){
                             holder.explanation.text="비건인 당신을 위해 "+str+"을 추천해요:)"
                         }else{
@@ -192,13 +244,25 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("HOT",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img2)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text ="몸녹히기엔 따끈따끈하고 "+str+" 왕강추"
                     }
                     1->{
                         val str=foodRecommendation.recommendCondition("COLD",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        holder.image1.setImageResource(R.drawable.img3)
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
+                            override fun onSuccess(p0: Uri?) {
+                                Glide.with(context).load(p0).into(holder.image1)
+                            }
+                        }
+                        )
                         holder.explanation.text =commentArray[Random().nextInt(4)]
                     }
                 }

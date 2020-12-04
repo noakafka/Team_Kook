@@ -1,6 +1,8 @@
 package com.example.teamkook
 
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -9,7 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_a.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,6 +29,8 @@ class Fragment_A : Fragment() {
     lateinit var recommendAdapter: RecommendAdapter
     lateinit var ID:String
     val mDatabase= FirebaseDatabase.getInstance()
+    val storage= FirebaseStorage.getInstance("gs://team-kook.appspot.com")
+    val reference=storage.reference
     lateinit var foodRecommendation:FoodClassification
     val commentArray= listOf<String>(
         "만약 오늘 힘든 일이 있으셨다면 제가 추천해주는 맛있는 음식들로 힘내보아요!",
@@ -116,8 +123,13 @@ class Fragment_A : Fragment() {
                 personal_food.text=line
                 explanation.text=commentArray[Random().nextInt(4)] //comment 만들고 붙이기
 
-                //////////////////////이미지는...............?
-                personal_recommendation.setImageResource(R.drawable.img1)
+                val img="img"+foodRecommendation.findIMG(keyword.last())+".jpg"
+                reference.child(img).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+                    override fun onSuccess(p0: Uri?) {
+                        Glide.with(this@Fragment_A).load(p0).into(personal_recommendation)
+                    }
+                }
+                )
             }
         },2500)
 
