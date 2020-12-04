@@ -96,20 +96,22 @@
                 android:layout_height="wrap_content"/>
 
             <ImageView
-                android:tint="@color/cardview_light_background"
+                android:id="@+id/my_review_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="right|center"
                 android:src="@mipmap/right_arrow"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
+                android:tint="@color/cardview_light_background" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/my_reviews"
-            android:orientation="vertical"
-            android:layout_weight="5"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="5"
+            android:orientation="vertical">
 
         </LinearLayout>
 

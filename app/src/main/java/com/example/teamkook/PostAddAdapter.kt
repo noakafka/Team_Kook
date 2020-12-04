@@ -37,6 +37,7 @@ class PostAddAdapter (var folders : ArrayList<String>)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.folderImage.setImageResource(R.mipmap.folder)
         holder.folderName.text = folders[position]
         if(position == selected){
 //            holder.folderImage.imageTintList = ColorStateList.valueOf(Color.parseColor("FFFAFAFA"))
