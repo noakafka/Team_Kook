@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -15,10 +16,12 @@ class PostAdapter (var post : ArrayList<Review_linkInfo>)
 
     inner class ViewHolder(itemView: View)
         : RecyclerView.ViewHolder(itemView){
+        var image : ImageView
         var comment : TextView
         var commentscore : RatingBar
         var commentspicy : RatingBar
         init{
+            image = itemView.findViewById(R.id.imageView2)
             comment = itemView.findViewById(R.id.post_comment)
             commentscore = itemView.findViewById(R.id.post_score)
             commentspicy = itemView.findViewById(R.id.post_spicy)
@@ -35,6 +38,7 @@ class PostAdapter (var post : ArrayList<Review_linkInfo>)
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.image.setImageResource(R.mipmap.profile)
         holder.comment.text = post[position].content
         holder.commentscore.rating = post[position].rating
         holder.commentspicy.rating = post[position].spicy
