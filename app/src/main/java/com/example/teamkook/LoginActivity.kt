@@ -13,10 +13,13 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity() {
 
     val mDatabase=FirebaseDatabase.getInstance()
+  ///  lateinit var foodRecommendation:FoodClassification
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+  //      foodRecommendation= FoodClassification(resources.openRawResource(R.raw.classification1),this)
+ //       foodRecommendation.readFiles()
         btnClick()
     }
 

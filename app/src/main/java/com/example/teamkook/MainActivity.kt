@@ -17,6 +17,8 @@ import kotlinx.android.synthetic.main.fragment_b.*
 
 class MainActivity  : AppCompatActivity() {
 
+    lateinit var foodRecommendation:FoodClassification
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Toast.makeText(applicationContext,"cccc", Toast.LENGTH_SHORT).show()
@@ -53,6 +55,9 @@ class MainActivity  : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 //        val i=intent
 //        val ID=i.getStringExtra("id") //로그인에서 전달한 아이디 전달받기
+        foodRecommendation= FoodClassification(resources.openRawResource(R.raw.classification1),this)
+        foodRecommendation.readFiles()
+
         settingPermission()
 
         //setSupportActionBar(toolbar)
@@ -63,6 +68,7 @@ class MainActivity  : AppCompatActivity() {
 
         VP.adapter = main_adapter
         VP.offscreenPageLimit = 3
+
 
         tabs_main.setupWithViewPager(VP)
         tabs_main.getTabAt(0)?.setIcon(resources.getDrawable(R.mipmap.home))

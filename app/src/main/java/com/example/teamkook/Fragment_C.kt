@@ -2,7 +2,9 @@ package com.example.teamkook
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.fragment_c.*
 
 /**
@@ -21,6 +24,7 @@ class Fragment_C() : Fragment() {
     lateinit var layoutManager: LinearLayoutManager
     lateinit var reviewAdapter : ReviewAdapter
     lateinit var rdb : DatabaseReference
+    lateinit var ID:String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +33,13 @@ class Fragment_C() : Fragment() {
         // Inflate the layout for this fragment
         var v : View = inflater.inflate(R.layout.fragment_c, container, false)
 
+
+        if(activity!=null){
+            val intent=activity!!.intent
+            if(intent!=null){
+                ID=intent.getStringExtra("id")
+            }
+        }
 
         return v
     }
@@ -45,13 +56,27 @@ class Fragment_C() : Fragment() {
 
 //        val info = ReviewInfo("ldh1", "https://www.youtube.com/watch?v=qWbHSOplcvY&feature=youtu.be", "이대로 끓이니까 너무 맛있었어요!!~", 4.0.toFloat(), 2.0.toFloat())
 //        rdb.push().setValue(info)
-        val query = FirebaseDatabase.getInstance().getReference("Review")
-
+        val query = FirebaseDatabase.getInstance().getReference("Review").child("time")
         
         val option = FirebaseRecyclerOptions.Builder<ReviewInfo>()
             .setQuery(query, ReviewInfo::class.java)
             .build()
         reviewAdapter = ReviewAdapter(option)
+        reviewAdapter.itemClickListener = object : ReviewAdapter.OnItemClickListener{
+            override fun onReviewItemClick(view: View, position: Int) {
+                val id = this@Fragment_C.ID
+                val link = reviewAdapter.getItem(position).link
+                Log.i("frag_C link", link)
+                var i = Intent(activity, PostActivity::class.java)
+                i.putExtra("id", id)
+                i.putExtra("link", link)
+                Log.i("link", link)
+                Log.i("클릭", id.toString())
+                startActivity(i)
+            }
+
+
+        }
         review_recyclerview.adapter = reviewAdapter
     }
 
