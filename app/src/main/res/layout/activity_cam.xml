@@ -23,7 +23,7 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/teamkook"
             android:layout_gravity="center"
             android:id="@+id/btn_gallery"
             android:background="@mipmap/gallery"
@@ -31,7 +31,7 @@
             android:layout_height="65dp"></ImageButton>
 
         <ImageButton
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/teamkook"
             android:layout_marginLeft ="50dp"
             android:layout_marginRight="70dp"
             android:id="@+id/btn_picture"

@@ -12,7 +12,7 @@
 
         <LinearLayout
 
-            android:background="@color/colorPrimary"
+            android:background="@color/teamkook"
             android:orientation="horizontal"
             android:layout_gravity="center"
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:tint="@color/colorPrimary"
+                    android:tint="@color/teamkook"
                     android:padding="4dp"
                     android:id="@+id/search_checkbox"
                     android:src="@mipmap/menu"
@@ -72,7 +72,7 @@
                     android:layout_height="35dp"
                     android:padding="3dp"
                     android:src="@mipmap/search"
-                    android:tint="@color/colorPrimary"></ImageView>
+                    android:tint="@color/teamkook"></ImageView>
 
             </LinearLayout>
 
@@ -80,7 +80,7 @@
                 android:id="@+id/cam_btn"
                 android:padding="3dp"
                 android:layout_marginLeft="5dp"
-                android:tint="@color/colorPrimary"
+                android:tint="@color/teamkook"
                 android:src="@mipmap/camera"
                 android:layout_width="50dp"
                 android:layout_height="50dp">
@@ -91,7 +91,7 @@
 
         <TextView
             android:textSize="18dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/teamkook"
             android:textColor="@color/cardview_light_background"
             android:text="  실시간 급상승 검색어"
             android:layout_width="match_parent"

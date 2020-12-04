@@ -8,7 +8,7 @@
     tools:context=".MyReviewActivity">
 
     <LinearLayout
-        android:background="@color/colorPrimary"
+        android:background="@color/teamkook"
         android:orientation="horizontal"
         android:layout_gravity="center"
         android:layout_width="match_parent"
