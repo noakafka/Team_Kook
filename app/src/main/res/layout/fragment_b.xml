@@ -90,6 +90,8 @@
             </LinearLayout>
 
         <TextView
+            android:id="@+id/realtime_text"
+            android:visibility="visible"
             android:textSize="18dp"
             android:background="@color/teamkook"
             android:textColor="@color/cardview_light_background"
@@ -98,6 +100,8 @@
             android:layout_height="wrap_content"></TextView>
 
         <LinearLayout
+            android:id="@+id/realtime_layout"
+            android:visibility="visible"
             android:layout_weight="9"
             android:layout_width="match_parent"
             android:layout_height="0dp">
@@ -114,6 +118,15 @@
 
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
+            android:id="@+id/search_result_rview"
+            android:layout_weight="9"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 

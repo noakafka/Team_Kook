@@ -14,10 +14,20 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.android.youtube.player.internal.c
+import com.google.android.youtube.player.internal.i
 import com.google.firebase.database.*
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import kotlinx.android.synthetic.main.activity_in_folder.*
 import kotlinx.android.synthetic.main.fragment_b.*
 import kotlinx.android.synthetic.main.search_dialog.*
+import okhttp3.*
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,6 +36,8 @@ import kotlin.collections.ArrayList
  */
 class Fragment_B(var c: Context) : Fragment() {
 
+    val APIKEY = "AIzaSyCLAfLcEQvBA5zrat3nReaT28iI-E3QH5c"
+    //val APIKEY = "AIzaSyAONAWO0Dta_zwAnMMBmNqkwBjCgSNGVSU"
     val mDatabase= FirebaseDatabase.getInstance()
     lateinit var ID:String
     var checkboxes= ArrayList<String>() //체크박스 항목 추가
@@ -33,6 +45,8 @@ class Fragment_B(var c: Context) : Fragment() {
     var search_str=""
     var rank = arrayListOf<String>()
     var arr = arrayListOf<String>("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +67,7 @@ class Fragment_B(var c: Context) : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        search_result_rview.layoutManager = LinearLayoutManager(c, LinearLayoutManager.VERTICAL, false)
         add_realtime_key()
 
         cam_btn.setOnClickListener {
@@ -61,32 +76,8 @@ class Fragment_B(var c: Context) : Fragment() {
 
         }
 
+
         search_checkbox.setOnClickListener {
-            /*var builder = AlertDialog.Builder(c)
-            builder.setTitle("검색 조건")
-            builder.setIcon(R.mipmap.search)
-
-            var v1 = layoutInflater.inflate(R.layout.search_dialog, null)
-            var c1 = v1.findViewById<CheckBox>(R.id.checkbox1)
-            var c2 = v1.findViewById<CheckBox>(R.id.checkbox2)
-            var c3 = v1.findViewById<CheckBox>(R.id.checkbox3)
-            var c4 = v1.findViewById<CheckBox>(R.id.checkbox4)
-            var c5 = v1.findViewById<CheckBox>(R.id.checkbox5)
-            var c6 = v1.findViewById<CheckBox>(R.id.checkbox6)
-            var c7 = v1.findViewById<CheckBox>(R.id.checkbox7)
-
-            builder.setView(v1)
-
-
-            builder.setPositiveButton("확인"){dialogInterface, i ->
-
-            }
-            builder.setNegativeButton("취소"){dialogInterface, i ->
-
-            }
-
-            builder.show()
-            */
 
             val dialogBuilder = AlertDialog.Builder(activity!!)
 //            var v1 = layoutInflater.inflate(R.layout.search_dialog, null)
@@ -111,6 +102,7 @@ class Fragment_B(var c: Context) : Fragment() {
         }
 
         manageDB()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,9 +113,17 @@ class Fragment_B(var c: Context) : Fragment() {
     }
 
     fun manageDB(){
+        lateinit var adapter : Research_Adapter
+        lateinit var items : ArrayList<result_items>
+
         val database=mDatabase.getReference("Accounts").child(ID)
         search.setOnClickListener {
 
+            realtime_text.visibility = View.GONE
+            realtime_layout.visibility = View.GONE
+            search_result_rview.visibility = View.VISIBLE
+
+            /*
             database.child("search word").addValueEventListener(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.childrenCount>10){ //list 10개 유지
@@ -137,26 +137,68 @@ class Fragment_B(var c: Context) : Fragment() {
                     //TODO("Not yet implemented")
                 }
             })
-            database.child("search word").push().setValue(search_edit.text.toString())
-
-                //검색어 합치기
-                for (i in 0 until checkboxes.size) {
-                    search_str+=checkboxes[i]+" "
-                }
-                checkboxes.clear()
+            */
+            //database.child("search word").push().setValue(search_edit.text.toString())
 
 
 
             //검색어 합치기
             search_str+=search_edit.text.toString()
 
-            //검색어 확인
-            Toast.makeText(c, search_str,Toast.LENGTH_SHORT).show()
+            for (i in 0 until checkboxes.size) {
+                search_str+=checkboxes[i]+" "
+            }
+            checkboxes.clear()
 
-            //최종검색어(search_str) 화면 넘기기
-//            val searchIntent=Intent(c, )
-//            searchIntent.putExtra("str",search_str)
-//            startActivity(searchIntent)
+            var final_search_str = search_str
+            search_str = ""
+            //검색어 확인
+            Toast.makeText(c, final_search_str,Toast.LENGTH_SHORT).show()
+
+
+
+
+
+            //val url1 = "https://www.googleapis.com/youtube/v3/search?/q=김치찌개&part=snippet&key=AIzaSyAONAWO0Dta_zwAnMMBmNqkwBjCgSNGVSU&maxResults=10"
+            val url1 = "https://www.googleapis.com/youtube/v3/search?q="+ final_search_str + "레시피" + "&part=snippet&key=" + APIKEY + "&maxResults=10"
+            println("final : " + final_search_str)
+            val client = OkHttpClient()
+            val request = Request.Builder().url(url1).build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call : Call, e : IOException){
+
+                }
+                override fun onResponse(call:Call, response: Response){
+                    val body = response.body()!!.string()
+                    println(body)
+
+                    val gson = GsonBuilder().create()
+                    val parser = JsonParser()
+                    val rootObj = parser.parse(body)
+                        .getAsJsonObject()
+
+
+
+                    val s_result =  gson.fromJson(rootObj, search_json::class.java)
+                    val items = s_result.items
+
+
+                    adapter = Research_Adapter(c, items)
+                    adapter.itemClickListener = object :Research_Adapter.OnItemClickListener{
+                        override fun onItemClick(view: View, position: Int) {
+                            Toast.makeText(c, "hi", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    activity!!.runOnUiThread {
+                        search_result_rview.adapter = adapter
+                    }
+
+
+                }
+            })
+
+
         }
     }
 
