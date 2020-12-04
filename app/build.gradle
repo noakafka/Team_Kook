@@ -30,6 +30,8 @@ repositories {
     google()
 }
 dependencies {
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation('org.apache.directory.studio:org.apache.commons.io:2.4')
     implementation('org.tensorflow:tensorflow-lite:0.0.0-nightly') { changing = true }

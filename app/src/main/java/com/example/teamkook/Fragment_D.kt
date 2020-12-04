@@ -94,8 +94,6 @@ class Fragment_D(var c: Context) : Fragment() {
 
     }
     fun add_review_key(){
-
-
         for(review in arr){
             val text = TextView(c)
             text.text = review.content
