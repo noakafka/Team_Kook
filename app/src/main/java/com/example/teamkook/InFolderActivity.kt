@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.renderscript.Sampler
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,42 +54,45 @@ class InFolderActivity : AppCompatActivity() {
         rdatabase.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(snap in snapshot.children){
+                    if(snap.key.toString()=="link")
+                        Toast.makeText(this@InFolderActivity,snap.value.toString(),Toast.LENGTH_SHORT).show()
 
-                    val file = snap.getValue(Folder::class.java)
+//                    val file = snapshot.getValue(Folder::class.java)
+                    if(snap.key.toString()=="link"){
+                        val file=snap.value.toString()
+                        if(file!="nolink"){
+                            var id1 : String = file!!.substring(file!!.lastIndexOf("=")+1)
+                            var id2 :String= file!!.substring(file!!.lastIndexOf("/")+1)
+                            var id = id1;
+                            if(id2.length < id1.length)
+                                id = id2;
+                            var youtubeURL = search1+id+search2
 
+                            val client = OkHttpClient()
+                            val request = Request.Builder().url(youtubeURL).build()
 
-
-                    if(file!=null){
-                        var id1 : String = file?.link!!.substring(file?.link!!.lastIndexOf("=")+1)
-                        var id2 :String= file?.link!!.substring(file?.link!!.lastIndexOf("/")+1)
-                        var id = id1;
-                        if(id2.length < id1.length)
-                            id = id2;
-                        var youtubeURL = search1+id+search2
-
-                        val client = OkHttpClient()
-                        val request = Request.Builder().url(youtubeURL).build()
-
-                        client.newCall(request).enqueue(object: Callback {
-                            override fun onFailure(call: Call, e: IOException) {
-                                Log.i("유튜브 파싱", "fail")
-                            }
-
-                            override fun onResponse(call: Call, response: Response) {
-                                val jsonData = response.body()?.string()
-                                if(jsonData!=null){
-                                    val jsonobj : JSONObject = JSONObject(jsonData)
-                                    var json_arr : JSONArray = jsonobj.getJSONArray("items")
-                                    var items : JSONObject = json_arr.getJSONObject(0)
-                                    var snippet : JSONObject = items.getJSONObject("snippet")
-
-                                    var youtube_title = snippet.getString("title")
-
-                                    array_in_folder.add(FolderMoreInfo(file.folder_name, file.link, youtube_title ))
+                            client.newCall(request).enqueue(object: Callback {
+                                override fun onFailure(call: Call, e: IOException) {
+                                    Log.i("유튜브 파싱", "fail")
                                 }
-                            }
 
-                        })
+                                override fun onResponse(call: Call, response: Response) {
+                                    val jsonData = response.body()?.string()
+                                    if(jsonData!=null){
+                                        val jsonobj : JSONObject = JSONObject(jsonData)
+                                        var json_arr : JSONArray = jsonobj.getJSONArray("items")
+                                        var items : JSONObject = json_arr.getJSONObject(0)
+                                        var snippet : JSONObject = items.getJSONObject("snippet")
+
+                                        var youtube_title = snippet.getString("title")
+
+                                        array_in_folder.add(FolderMoreInfo(folderName, file, youtube_title ))
+                                    }
+                                }
+
+                            })
+                        }
+
                     }
                 }
                     //adapter.notifyDataSetChanged()

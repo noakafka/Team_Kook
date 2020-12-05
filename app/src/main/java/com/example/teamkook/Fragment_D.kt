@@ -4,17 +4,14 @@ package com.example.teamkook
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.youtube.player.internal.c
-import com.google.android.youtube.player.internal.i
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -22,21 +19,16 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_my_review.*
 import kotlinx.android.synthetic.main.fragment_b.*
 import kotlinx.android.synthetic.main.fragment_d.*
-import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.IOException
 
 /**
  * A simple [Fragment] subclass.
  */
 class Fragment_D(var c: Context) : Fragment() {
 
-    lateinit var adapter :MyFolderAdapter
-    var folderNames : ArrayList<String> = ArrayList<String>()
     //val arr = arrayListOf<String>("이대로 끓이니까 너무 맛있었어요~!!!", "제 기준 굴소스를 추가하니까 더 맛있더라구요", "에어프라이기로 하면 더 쉽습니당~!~!","ㅜㅜ 제 입맛에는 아닌가 봐요.. 별로였어요..")
     var arr : ArrayList<ReviewInfo> = ArrayList<ReviewInfo>()
-    val fav_arr = arrayListOf<String>("김치찌개", "한식")
+    val fav_arr = arrayListOf<String>()
+    val mDatabase=FirebaseDatabase.getInstance()
     lateinit var ID:String
 
     override fun onCreateView(
@@ -81,10 +73,9 @@ class Fragment_D(var c: Context) : Fragment() {
     }
 
     fun find_my_review(){
-        val rdatabase = FirebaseDatabase.getInstance().getReference("Review").child("time")
+        val rdatabase = mDatabase.getReference("Review").child("time")
         rdatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                arr.clear()
                 for(snap in snapshot.children){
 
                     val review = snap.getValue(ReviewInfo::class.java)
@@ -125,41 +116,61 @@ class Fragment_D(var c: Context) : Fragment() {
     }
 
     fun add_favorite_folder(){
-        my_folders.layoutManager = LinearLayoutManager(c,
-        LinearLayoutManager.HORIZONTAL, false)
-        val rdatabase = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Folder")
-        rdatabase.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                folderNames.clear()
-                for(snap in snapshot.children){
+        val database=mDatabase.getReference("Accounts").child(ID).child("Folder")
+            database.addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //check=true
+                    for(shot in snapshot.children){
 
-                    Log.i("폴더이름", snap.key.toString())
-                    folderNames.add(snap.key.toString())
+                        val list=shot.getValue(Folder::class.java)
+                        if (list != null) {
+                            list.folder_name?.let { fav_arr.add(it) }
+                            //break
+                        }
+
+                    }
                 }
 
-            }
-
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
-            //adapter.notifyDataSetChanged()
-
-
         })
 
-
-
-        adapter = MyFolderAdapter(folderNames)
-        adapter.itemClickListener = object : MyFolderAdapter.OnItemClickListener{
-            override fun onItemClick(view: View, position: Int) {
-                var intent = Intent(c, InFolderActivity::class.java)
-                intent.putExtra("f_name", adapter.folderName[position])
-                intent.putExtra("id", ID)
-                startActivity(intent)
+        val hand=Handler()
+        hand.postDelayed( {
+            for((i, str) in fav_arr.withIndex()){
+            if(i == 0){
+                first_favorite_name.text = str
+                first_favorite.setImageResource(R.mipmap.favorite_folder)
+                first_favorite.setOnClickListener {
+                    var intent = Intent(c, InFolderActivity::class.java)
+                    intent.putExtra("f_name", first_favorite_name.text.toString())
+                    intent.putExtra("id", ID)
+                    startActivity(intent)
+                }
             }
+            else if(i == 1){
+                second_favorite_name.text = str
+                second_favorite.setImageResource(R.mipmap.favorite_folder)
+                second_favorite.setOnClickListener {
+                    var intent = Intent(c, InFolderActivity::class.java)
+                    intent.putExtra("f_name", second_favorite_name.text.toString())
+                    intent.putExtra("id", ID)
+                    startActivity(intent)
+                }
+            }
+            else{
+                third_favorite_name.text = str
+                third_favorite.setImageResource(R.mipmap.favorite_folder)
+                third_favorite.setOnClickListener {
+                    var intent = Intent(c, InFolderActivity::class.java)
+                    intent.putExtra("f_name", third_favorite_name.text.toString())
+                    intent.putExtra("id", ID)
+                    startActivity(intent)
+                }
+            }
+            }
+        },1000)
 
-        }
-        my_folders.adapter = adapter
     }
 
 }
