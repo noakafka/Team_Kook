@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -37,12 +38,12 @@ class FolderActivity() : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 //check=true
                 for(shot in snapshot.children){
-                    if(shot.key.toString()=="Folder"){ //folder 이름 가져오기
+
                         val list=shot.getValue(Folder::class.java)
                         if (list != null) {
                             folder_data.add(list)
                         }
-                    }
+
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -53,6 +54,32 @@ class FolderActivity() : AppCompatActivity() {
 //        folder_data.add(Folder("김치찌개", "주소"))
 //        folder_data.add(Folder("한식", "주소"))
 
+        fav_btn_d.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(this)
+            val v = layoutInflater.inflate(R.layout.add_folder_dialog, null)
+            dialogBuilder.setTitle("새 폴더 만들기")
+                .setCancelable(false)
+                .setPositiveButton("확인",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        //폴더추가기능
+                        Handler().postDelayed({
+                            val editText : EditText = v.findViewById(R.id.new_folder_name)
+                            var new_fname = editText.text.toString()
+                            val database=mDatabase.getReference("Accounts").child(_id)
+                            val dd=Folder(new_fname,"nolink")
+                            database.child("Folder").child(new_fname).setValue(dd)
+                            folder_data.add(dd)
+                            Toast.makeText(applicationContext, new_fname, Toast.LENGTH_SHORT).show()
+                        },1000)
+
+                    })
+                .setView(v)
+
+            val alert = dialogBuilder.create()
+            alert.show()
+
+        }
+
         adapter = Folder_Adapter(applicationContext, folder_data){ folder ->
             var intent = Intent(applicationContext, InFolderActivity::class.java)
             intent.putExtra("f_name", folder.folder_name)
@@ -62,26 +89,5 @@ class FolderActivity() : AppCompatActivity() {
         var layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
         folder_rview.layoutManager = layoutManager
         folder_rview.adapter = adapter
-
-        fav_btn_d.setOnClickListener {
-            val dialogBuilder = AlertDialog.Builder(this)
-            val v = layoutInflater.inflate(R.layout.add_folder_dialog, null)
-            dialogBuilder.setTitle("새 폴더 만들기")
-                .setCancelable(false)
-                .setPositiveButton("확인",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        //폴더추가기능
-                        val editText : EditText = v.findViewById(R.id.new_folder_name)
-                        var new_fname = editText.text.toString()
-                        val database=mDatabase.getReference("Accounts").child(_id)
-                        database.child("Folder").child(new_fname).push()
-                        Toast.makeText(applicationContext, new_fname, Toast.LENGTH_SHORT).show()
-                    })
-                .setView(v)
-
-            val alert = dialogBuilder.create()
-            alert.show()
-
-        }
     }
 }
