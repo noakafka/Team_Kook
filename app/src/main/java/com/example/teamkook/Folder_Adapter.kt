@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class Folder_Adapter(val context: Context,
-                     var items:ArrayList<Folder>, val itemClick : (Folder) -> Unit): RecyclerView.Adapter<Folder_Adapter.ViewHolder>() {
+                     var items:ArrayList<String>, val itemClick : (String) -> Unit): RecyclerView.Adapter<Folder_Adapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,11 +27,11 @@ class Folder_Adapter(val context: Context,
         holder.bind(items[position], context)
         //set friend's profile image
         //holder.f_image.setImageResource()
-        holder.f_name.text = data.folder_name
+        holder.f_name.text = data
 
     }
 
-    inner class ViewHolder(itemView: View, itemClick: (Folder) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View, itemClick: (String) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
         var f_name: TextView
 
@@ -45,7 +45,7 @@ class Folder_Adapter(val context: Context,
             }*/
 
         }
-        fun bind(folder : Folder, context : Context){
+        fun bind(folder : String, context : Context){
             itemView.setOnClickListener { itemClick(folder) }
         }
 
