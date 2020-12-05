@@ -187,6 +187,11 @@ class Fragment_B(var c: Context) : Fragment() {
                     adapter = Research_Adapter(c, items)
                     adapter.itemClickListener = object :Research_Adapter.OnItemClickListener{
                         override fun onItemClick(view: View, position: Int) {
+                            var link = "https://www.youtube.com/watch?v=".plus(adapter.items[position].id.videoId)
+                            var i = Intent(c, PostActivity::class.java)
+                            i.putExtra("id", ID)
+                            i.putExtra("link", link)
+                            startActivity(i)
                             Toast.makeText(c, "hi", Toast.LENGTH_SHORT).show()
                         }
                     }

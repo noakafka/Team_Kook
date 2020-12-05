@@ -31,18 +31,18 @@ class FolderActivity() : AppCompatActivity() {
         val _id=i.getStringExtra("id") //로그인에서 전달한 아이디 전달받기
 
         // 여기에 DB에서 폴더리스트 받아오면 댐
-        var folder_data : ArrayList<Folder> = ArrayList<Folder>()
+        var folder_data : ArrayList<String> = ArrayList<String>()
         val database=mDatabase.getReference("Accounts").child(_id).child("Folder") //해당 유저 테이블
         database.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 //check=true
                 for(shot in snapshot.children){
-
-                        val list=shot.getValue(Folder::class.java)
-                        if (list != null) {
-                            folder_data.add(list)
-                        }
+                        folder_data.add(shot.key.toString())
+//                        val list=shot.getValue(Folder::class.java)
+//                        if (list != null) {
+//                            folder_data.add(list)
+//                        }
 
                 }
             }
@@ -67,8 +67,8 @@ class FolderActivity() : AppCompatActivity() {
                             var new_fname = editText.text.toString()
                             val database=mDatabase.getReference("Accounts").child(_id)
                             val dd=Folder(new_fname,"nolink")
-                            database.child("Folder").child(new_fname).setValue(dd)
-                            folder_data.add(dd)
+                            database.child("Folder").child(new_fname).push().setValue(dd)
+                            folder_data.add(new_fname)
                             Toast.makeText(applicationContext, new_fname, Toast.LENGTH_SHORT).show()
                         },1000)
 
@@ -82,7 +82,7 @@ class FolderActivity() : AppCompatActivity() {
 
         adapter = Folder_Adapter(applicationContext, folder_data){ folder ->
             var intent = Intent(applicationContext, InFolderActivity::class.java)
-            intent.putExtra("f_name", folder.folder_name)
+            intent.putExtra("f_name", folder)
             intent.putExtra("id", _id)
             startActivityForResult(intent, 0)
         }

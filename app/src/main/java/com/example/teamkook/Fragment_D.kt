@@ -76,6 +76,7 @@ class Fragment_D(var c: Context) : Fragment() {
         val rdatabase = mDatabase.getReference("Review").child("time")
         rdatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                arr.clear()
                 for(snap in snapshot.children){
 
                     val review = snap.getValue(ReviewInfo::class.java)
@@ -121,12 +122,12 @@ class Fragment_D(var c: Context) : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //check=true
                     for(shot in snapshot.children){
-
-                        val list=shot.getValue(Folder::class.java)
-                        if (list != null) {
-                            list.folder_name?.let { fav_arr.add(it) }
-                            //break
-                        }
+                        fav_arr.add(shot.key.toString())
+//                        val list=shot.getValue(Folder::class.java)
+//                        if (list != null) {
+//                            list.folder_name?.let { fav_arr.add(it) }
+//                            //break
+//                        }
 
                     }
                 }

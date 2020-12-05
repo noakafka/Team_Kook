@@ -38,7 +38,7 @@ class PostActivity : YouTubeBaseActivity(){
     lateinit var linkID : String
     lateinit var ID :String
     val url1 = "https://www.googleapis.com/youtube/v3/videos?id="
-    val url2 = "&key=AIzaSyAONAWO0Dta_zwAnMMBmNqkwBjCgSNGVSU&part=snippet"
+    val url2 = "&key=AIzaSyCLAfLcEQvBA5zrat3nReaT28iI-E3QH5c&part=snippet"
     val APIKEY = "AIzaSyAONAWO0Dta_zwAnMMBmNqkwBjCgSNGVSU"
     
     //현재 동영상 정보
