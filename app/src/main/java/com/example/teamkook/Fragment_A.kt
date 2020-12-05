@@ -123,7 +123,7 @@ class Fragment_A : Fragment() {
                 personal_food.text=line
                 explanation.text=commentArray[Random().nextInt(4)] //comment 만들고 붙이기
 
-                val img="img"+foodRecommendation.findIMG(keyword.last())+".jpg"
+                val img="img"+foodRecommendation.findIMG(keyword.last())
                 reference.child(img).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
                     override fun onSuccess(p0: Uri?) {
                         Glide.with(this@Fragment_A).load(p0).into(personal_recommendation)

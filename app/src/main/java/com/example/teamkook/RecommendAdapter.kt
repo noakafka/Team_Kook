@@ -124,7 +124,6 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
 
             }
         }
-        ///이미지 어떻게 가져와~~~~~~~~~~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!?????????
         foodRecommendation= FoodClassification(inputstream1,context)
         when(position){
             0 -> {
@@ -132,7 +131,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("RAIN",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -144,7 +143,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     1->{
                         val str= foodRecommendation.recommendCondition("SNOW",1,standard)
                         holder.firstfood.text =str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -156,7 +155,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     2->{
                         val str=foodRecommendation.recommendCondition("VEGAN",1,standard)
                         holder.firstfood.text =str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -172,7 +171,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("BREAKFAST",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -184,7 +183,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     1->{
                         val str=foodRecommendation.recommendCondition("LUNCH",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -196,7 +195,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     2->{
                         val str=foodRecommendation.recommendCondition("DINNER",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -212,7 +211,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("SPICY",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -224,7 +223,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     1->{
                         val str=foodRecommendation.recommendCondition("SPICY",0,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -244,7 +243,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     0->{
                         val str=foodRecommendation.recommendCondition("HOT",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)
@@ -256,7 +255,7 @@ class RecommendAdapter (var info : ArrayList<RecommendInfo>, var standard:ArrayL
                     1->{
                         val str=foodRecommendation.recommendCondition("COLD",1,standard)
                         holder.firstfood.text = str!!.split(" ").last()
-                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())+".jpg"
+                        val img="img"+foodRecommendation.findIMG(str!!.split(" ").last())
                         reference.child(img).downloadUrl.addOnSuccessListener(object :OnSuccessListener<Uri>{
                             override fun onSuccess(p0: Uri?) {
                                 Glide.with(context).load(p0).into(holder.image1)

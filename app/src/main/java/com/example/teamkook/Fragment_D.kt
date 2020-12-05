@@ -4,6 +4,7 @@ package com.example.teamkook
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,7 +27,8 @@ class Fragment_D(var c: Context) : Fragment() {
 
     //val arr = arrayListOf<String>("이대로 끓이니까 너무 맛있었어요~!!!", "제 기준 굴소스를 추가하니까 더 맛있더라구요", "에어프라이기로 하면 더 쉽습니당~!~!","ㅜㅜ 제 입맛에는 아닌가 봐요.. 별로였어요..")
     var arr : ArrayList<ReviewInfo> = ArrayList<ReviewInfo>()
-    val fav_arr = arrayListOf<String>("김치찌개", "한식")
+    val fav_arr = arrayListOf<String>()
+    val mDatabase=FirebaseDatabase.getInstance()
     lateinit var ID:String
 
     override fun onCreateView(
@@ -71,7 +73,7 @@ class Fragment_D(var c: Context) : Fragment() {
     }
 
     fun find_my_review(){
-        val rdatabase = FirebaseDatabase.getInstance().getReference("Review").child("time")
+        val rdatabase = mDatabase.getReference("Review").child("time")
         rdatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(snap in snapshot.children){
@@ -114,7 +116,28 @@ class Fragment_D(var c: Context) : Fragment() {
     }
 
     fun add_favorite_folder(){
-        for((i, str) in fav_arr.withIndex()){
+        val database=mDatabase.getReference("Accounts").child(ID).child("Folder")
+            database.addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //check=true
+                    for(shot in snapshot.children){
+
+                        val list=shot.getValue(Folder::class.java)
+                        if (list != null) {
+                            list.folder_name?.let { fav_arr.add(it) }
+                            //break
+                        }
+
+                    }
+                }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+
+        val hand=Handler()
+        hand.postDelayed( {
+            for((i, str) in fav_arr.withIndex()){
             if(i == 0){
                 first_favorite_name.text = str
                 first_favorite.setImageResource(R.mipmap.favorite_folder)
@@ -145,7 +168,9 @@ class Fragment_D(var c: Context) : Fragment() {
                     startActivity(intent)
                 }
             }
-        }
+            }
+        },1000)
+
     }
 
 }

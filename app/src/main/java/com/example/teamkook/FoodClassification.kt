@@ -188,7 +188,13 @@ SQLiteOpenHelper(context,DB_NAME,null,DB_VERSION){
             val num=cursor?.getString(0)
             cursor.close()
             db.close()
-            return num
+            val numint=num?.toInt()
+            return if(numint==10||numint==15||numint==19||numint==23||numint==25||numint==30||numint==32||numint==38||numint==39||numint==66||numint==81||numint==84||numint==85){
+                "$num.JPG"
+            }else{
+                "$num.jpg"
+            }
+
         }
         cursor.close()
         db.close()
