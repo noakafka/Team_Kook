@@ -29,7 +29,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="10dp"
             android:layout_weight="1"
-            android:text="김치찌개"
             android:textColor="@color/cardview_light_background"
             android:textSize="20dp" />
 
